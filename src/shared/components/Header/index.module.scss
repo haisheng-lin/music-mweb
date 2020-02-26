@@ -1,0 +1,40 @@
+@import 'assets/styles/mixin.scss';
+@import 'assets/styles/variables.scss';
+
+.header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 44px;
+  text-align: center;
+  color: $color-theme;
+}
+
+.icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  margin-right: 9px;
+  background-size: 32px 32px;
+  border-radius: 50%;
+  @include bg-image('logo');
+}
+
+.text {
+  line-height: 44px;
+  font-size: $font-size-large;
+}
+
+.mine {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.iconMine {
+  display: block;
+  padding: 12px;
+  font-size: 20px;
+  color: $color-theme;
+}
