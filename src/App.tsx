@@ -12,8 +12,8 @@ import 'assets/styles/index.scss';
 const App: React.FC = () => {
   const tabs = [
     { label: '推荐', path: LOCAL_PATHS.recommend.routePath },
-    { label: '歌手', path: LOCAL_PATHS.singer.routePath },
-    { label: '排行', path: LOCAL_PATHS.rank.routePath },
+    { label: '歌手', path: LOCAL_PATHS.singer.list.routePath },
+    { label: '排行', path: LOCAL_PATHS.rank.list.routePath },
     { label: '搜索', path: LOCAL_PATHS.search.routePath }
   ];
 

@@ -25,3 +25,19 @@
     bottom: -10px;
   }
 }
+
+// 单行溢出显示省略号
+@mixin ellipsis() {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+// 多行溢出显示省略号
+@mixin ellipsis-ln($line) {
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: $line;
+}

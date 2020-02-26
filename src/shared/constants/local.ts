@@ -1,0 +1,30 @@
+export const LOCAL_PATHS = {
+  recommend: {
+    routePath: '/recommend',
+    getPathByParams: () => 'recommend'
+  },
+  singer: {
+    list: {
+      routePath: '/singer/list',
+      getPathByParams: () => '/singer/list'
+    },
+    detail: {
+      routePath: '/singer/detail/:id',
+      getPathByParams: (singerId: string) => `/singer/detail/${singerId}`
+    }
+  },
+  rank: {
+    list: {
+      routePath: '/rank/list',
+      getPathByParams: () => '/rank/list'
+    },
+    detail: {
+      routePath: '/rank/detail/:type',
+      getPathByParams: (type: number) => `/rank/type/${type}`
+    }
+  },
+  search: {
+    routePath: '/search',
+    getPathByParams: () => 'search'
+  }
+};
