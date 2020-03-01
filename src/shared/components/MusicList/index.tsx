@@ -11,10 +11,11 @@ interface MusicListProps {
   title?: string;
   cover?: string;
   songList?: FulfilledSingerSong[];
+  onBack?: () => void;
 }
 
 const MusicList: React.FC<MusicListProps> = props => {
-  const { className = '', title, cover, songList } = props;
+  const { className = '', title, cover, songList, onBack } = props;
 
   return (
     <div
@@ -29,6 +30,7 @@ const MusicList: React.FC<MusicListProps> = props => {
             'icon-back': true,
             [styles.backIcon]: true
           })}
+          onClick={onBack}
         />
         <h1 className={styles.title}>{title}</h1>
       </header>

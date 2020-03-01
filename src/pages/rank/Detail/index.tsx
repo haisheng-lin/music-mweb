@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import InfiniteScroller from 'react-infinite-scroller';
 
@@ -6,6 +6,8 @@ import MusicList from 'shared/components/MusicList';
 
 import SongUsecase from 'shared/domain/song';
 import usePagination from 'shared/hooks/usePagination';
+
+import { FulfilledRank } from 'shared/domain/song/typings';
 
 import styles from './index.module.scss';
 
@@ -16,11 +18,20 @@ interface RankDetailRouteParamProps {
 const RankDetail: React.FC<RouteComponentProps<
   RankDetailRouteParamProps
 >> = props => {
-  const rankType = props.match.params.type;
+  const rankType = Number(props.match.params.type);
+  const [rank, setRank] = useState<FulfilledRank>();
+
+  const getRankList = async () => {
+    try {
+      const result = await SongUsecase.getRankList();
+      const matched = result.find(item => item.type === rankType);
+      setRank(matched);
+    } catch (e) {}
+  };
 
   const query = useMemo(
     () => ({
-      type: Number(rankType)
+      type: rankType
     }),
     [rankType]
   );
@@ -32,6 +43,14 @@ const RankDetail: React.FC<RouteComponentProps<
     onError: e => console.log(e.message)
   });
 
+  const onBack = () => {
+    props.history.goBack();
+  };
+
+  useEffect(() => {
+    getRankList();
+  }, []);
+
   return (
     <div className={styles.container}>
       <InfiniteScroller
@@ -42,9 +61,10 @@ const RankDetail: React.FC<RouteComponentProps<
         useWindow={false}
       >
         <MusicList
-          title="巅峰帮"
-          cover="https://y.gtimg.cn/music/photo_new/T002R300x300M000003dYaaO2IxmpP.jpg?max_age=2592000"
+          title={rank && rank.name}
+          cover={rank && rank.secondPic}
           songList={songList}
+          onBack={onBack}
         />
       </InfiniteScroller>
     </div>
