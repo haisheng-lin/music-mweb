@@ -24,6 +24,7 @@ const usePagination = <T, U>(option: Option<T, U>) => {
   });
   const [data, setData] = useState(defaultValue);
   const dataRef = useRef(data);
+  dataRef.current = data;
 
   const hasMore = data.length >= pageSize * params.pageNo;
 
@@ -103,7 +104,7 @@ const usePagination = <T, U>(option: Option<T, U>) => {
       finalTask({
         pageNo: params.pageNo,
         pageSize: params.pageSize,
-        queryData: query
+        queryData: params.query
       });
     }
   }, [params, disabled]);
