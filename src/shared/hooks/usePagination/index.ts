@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import useAsyncTask from '../useAsyncTask';
 import getFetcherStrategy from './fetcher-strategies';
@@ -23,6 +23,7 @@ const usePagination = <T, U>(option: Option<T, U>) => {
     pageSize
   });
   const [data, setData] = useState(defaultValue);
+  const dataRef = useRef(data);
 
   const hasMore = data.length >= pageSize * params.pageNo;
 
@@ -43,13 +44,19 @@ const usePagination = <T, U>(option: Option<T, U>) => {
         queryData
       });
       const fulfilledResult = result || [];
+      const lastSaveData = dataRef.current;
       // 具体 setData 策略
       if (!isRefetch) {
         const shouldReset = params.pageNo === initialPageNo;
-        setData(shouldReset ? fulfilledResult : data.concat(fulfilledResult));
+        setData(
+          shouldReset ? fulfilledResult : lastSaveData.concat(fulfilledResult)
+        );
       } else {
-        const previousPageData = data.slice(0, (pageNo - 1) * params.pageSize);
-        const nextPageData = data.slice((pageNo + 1) * params.pageSize);
+        const previousPageData = lastSaveData.slice(
+          0,
+          (pageNo - 1) * params.pageSize
+        );
+        const nextPageData = lastSaveData.slice(pageNo * params.pageSize);
         setData([...previousPageData, ...fulfilledResult, ...nextPageData]);
       }
     } catch (e) {
