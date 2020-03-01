@@ -1,7 +1,7 @@
 export const LOCAL_PATHS = {
   recommend: {
     routePath: '/recommend',
-    getPathByParams: () => 'recommend'
+    getPathByParams: () => '/recommend'
   },
   singer: {
     list: {
@@ -20,11 +20,11 @@ export const LOCAL_PATHS = {
     },
     detail: {
       routePath: '/rank/detail/:type',
-      getPathByParams: (type: number) => `/rank/type/${type}`
+      getPathByParams: (type: number) => `/rank/detail/${type}`
     }
   },
   search: {
     routePath: '/search',
-    getPathByParams: () => 'search'
+    getPathByParams: () => '/search'
   }
 };

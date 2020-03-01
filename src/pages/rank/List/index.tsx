@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import SongUsecase from 'shared/domain/song';
 import { FulfilledRank } from 'shared/domain/song/typings';
+import { LOCAL_PATHS } from 'shared/constants';
 
 import styles from './index.module.scss';
 
@@ -16,6 +17,10 @@ const RankList: React.FC<RouteComponentProps> = props => {
     } catch (e) {}
   };
 
+  const onRankClick = (rank: FulfilledRank) => () => {
+    props.history.push(LOCAL_PATHS.rank.detail.getPathByParams(rank.type));
+  };
+
   useEffect(() => {
     getRankList();
   }, []);
@@ -25,7 +30,11 @@ const RankList: React.FC<RouteComponentProps> = props => {
       <div className={styles.list}>
         <ul>
           {rankList.map(rank => (
-            <li key={rank.type} className={styles.item}>
+            <li
+              key={rank.type}
+              className={styles.item}
+              onClick={onRankClick(rank)}
+            >
               <div className={styles.icon}>
                 <img
                   width="100"

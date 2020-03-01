@@ -6,6 +6,7 @@ import { LOCAL_PATHS } from 'shared/constants';
 import Recommend from './Recommend';
 import SingerList from './singer/List';
 import RankList from './rank/List';
+import RankDetail from './rank/Detail';
 
 const Routes: React.FC = () => {
   return (
@@ -24,6 +25,11 @@ const Routes: React.FC = () => {
         path={LOCAL_PATHS.rank.list.routePath}
         exact
         component={RankList}
+      />
+      <Route
+        path={LOCAL_PATHS.rank.detail.routePath}
+        exact
+        component={RankDetail}
       />
     </>
   );
