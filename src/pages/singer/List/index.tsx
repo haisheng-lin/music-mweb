@@ -3,6 +3,7 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import SongUsecase from 'shared/domain/song';
 import { FulfilledSinger } from 'shared/domain/song/typings';
+import { LOCAL_PATHS } from 'shared/constants';
 
 import styles from './index.module.scss';
 
@@ -16,6 +17,12 @@ const SingerList: React.FC<RouteComponentProps> = props => {
     } catch (e) {}
   };
 
+  const onSingerClick = (singer: FulfilledSinger) => () => {
+    props.history.push(
+      LOCAL_PATHS.singer.detail.getPathByParams(singer.singerId)
+    );
+  };
+
   useEffect(() => {
     searchSingerList();
   }, []);
@@ -24,7 +31,11 @@ const SingerList: React.FC<RouteComponentProps> = props => {
     <div className={styles.container}>
       <ul className={styles.list}>
         {singerList.map(singer => (
-          <li key={singer.singerId} className={styles.item}>
+          <li
+            key={singer.singerId}
+            className={styles.item}
+            onClick={onSingerClick(singer)}
+          >
             <img
               src={singer.singerPic}
               alt={singer.singerName}
