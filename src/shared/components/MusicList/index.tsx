@@ -12,10 +12,18 @@ interface MusicListProps {
   cover?: string;
   songList?: FulfilledSingerSong[];
   onBack?: () => void;
+  onSongSelect?: (song: FulfilledSingerSong, index: number) => void;
 }
 
 const MusicList: React.FC<MusicListProps> = props => {
-  const { className = '', title, cover, songList, onBack } = props;
+  const {
+    className = '',
+    title,
+    cover,
+    songList,
+    onSongSelect,
+    onBack
+  } = props;
 
   return (
     <div
@@ -54,7 +62,11 @@ const MusicList: React.FC<MusicListProps> = props => {
         </div>
       </div>
       <div>
-        <SongList className={styles.songListContainer} songList={songList} />
+        <SongList
+          className={styles.songListContainer}
+          songList={songList}
+          onSongSelect={onSongSelect}
+        />
       </div>
     </div>
   );

@@ -21,7 +21,7 @@ const RankDetail: React.FC<RouteComponentProps<
   const rankType = Number(props.match.params.type);
   const [rank, setRank] = useState<FulfilledRank>();
 
-  const getRankList = async () => {
+  const getRankList = async (rankType: number) => {
     try {
       const result = await SongUsecase.getRankList();
       const matched = result.find(item => item.type === rankType);
@@ -43,8 +43,8 @@ const RankDetail: React.FC<RouteComponentProps<
   };
 
   useEffect(() => {
-    getRankList();
-  }, []);
+    getRankList(rankType);
+  }, [rankType]);
 
   return (
     <div className={styles.container}>

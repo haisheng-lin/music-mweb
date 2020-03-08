@@ -2,10 +2,14 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import InfiniteScroller from 'react-infinite-scroller';
 
+import Container from 'shared/container';
 import usePagination from 'shared/hooks/usePagination';
 
 import SongUsecase from 'shared/domain/song';
-import { FulfilledSingerDetail } from 'shared/domain/song/typings';
+import {
+  FulfilledSingerDetail,
+  FulfilledSingerSong
+} from 'shared/domain/song/typings';
 import MusicList from 'shared/components/MusicList';
 
 import styles from './index.module.scss';
@@ -16,6 +20,7 @@ interface RouteParams {
 
 const SingerDetail: React.FC<RouteComponentProps<RouteParams>> = props => {
   const singerId = props.match.params.id;
+  const { selectPlay } = Container.useContainer();
 
   const [singer, setSinger] = useState<FulfilledSingerDetail>();
 
@@ -42,6 +47,18 @@ const SingerDetail: React.FC<RouteComponentProps<RouteParams>> = props => {
     props.history.goBack();
   };
 
+  const onSongSelect = (_: FulfilledSingerSong, index: number) => {
+    selectPlay(
+      songList.map(song => ({
+        singerName: song.singerName,
+        songId: song.songId,
+        songName: song.songName,
+        image: song.songPic
+      })),
+      index
+    );
+  };
+
   useEffect(() => {
     if (singerId) {
       getSingerDetail(singerId);
@@ -62,6 +79,7 @@ const SingerDetail: React.FC<RouteComponentProps<RouteParams>> = props => {
           cover={singer && singer.avatar}
           songList={songList}
           onBack={onBack}
+          onSongSelect={onSongSelect}
         />
       </InfiniteScroller>
     </div>

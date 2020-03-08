@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
+import Container from 'shared/container';
+
 import Header from 'shared/components/Header';
 import Tabs from 'shared/components/Tabs';
 import Routes from 'pages/Routes';
@@ -18,7 +20,7 @@ const App: React.FC = () => {
   ];
 
   return (
-    <>
+    <Container.Provider>
       <Header />
       <Router>
         <Tabs tabs={tabs} />
@@ -26,7 +28,7 @@ const App: React.FC = () => {
           <Routes />
         </Switch>
       </Router>
-    </>
+    </Container.Provider>
   );
 };
 
