@@ -46,7 +46,7 @@ export default {
    * 获取歌手详情
    */
   getSingerDetail: (singerId: string) => {
-    return request.get<ResponseSingerDetail>('/music/singer/search', {
+    return request.get<ResponseSingerDetail>('/music/singer/detail', {
       singerId
     });
   },
