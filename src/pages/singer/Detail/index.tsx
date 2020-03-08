@@ -19,7 +19,9 @@ const SingerDetail: React.FC<RouteComponentProps<RouteParams>> = props => {
 
   const [singer, setSinger] = useState<FulfilledSingerDetail>();
 
-  const query = useMemo(() => ({ singerId: singerId || '' }), [singerId]);
+  const query = useMemo(() => (singerId ? { singerId } : undefined), [
+    singerId
+  ]);
 
   const { data: songList, loadMore, hasMore } = usePagination({
     type: 'ROLL',

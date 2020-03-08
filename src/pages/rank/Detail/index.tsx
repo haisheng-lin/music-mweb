@@ -29,12 +29,7 @@ const RankDetail: React.FC<RouteComponentProps<
     } catch (e) {}
   };
 
-  const query = useMemo(
-    () => ({
-      type: rankType
-    }),
-    [rankType]
-  );
+  const query = useMemo(() => ({ type: rankType }), [rankType]);
 
   const { data: songList, loadMore, hasMore } = usePagination({
     type: 'ROLL',
