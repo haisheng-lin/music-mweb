@@ -201,3 +201,21 @@ export interface FulfilledSongDetail {
   rate: number;
   size: number; // 歌曲大小
 }
+
+/**
+ * 存在播放器中的歌曲
+ */
+export interface PlayerSong {
+  songId: string;
+  songName: string;
+  singerName: string;
+  image: string;
+}
+
+/**
+ * 正在播放的歌曲（需获取详情的歌词与播放地址）
+ */
+export interface PlayingSong extends PlayerSong {
+  lrcLink: string;
+  playUrl: string;
+}

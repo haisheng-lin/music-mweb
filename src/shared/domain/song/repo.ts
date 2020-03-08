@@ -72,6 +72,6 @@ export default {
    * 获取歌曲详情
    */
   getSongDetail: (songId: string) => {
-    return request.get<ResponseSongDetail>('/music/song/detail ', { songId });
+    return request.get<ResponseSongDetail>('/music/song/detail', { songId });
   }
 };
