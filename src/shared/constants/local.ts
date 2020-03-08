@@ -28,3 +28,5 @@ export const LOCAL_PATHS = {
     getPathByParams: () => '/search'
   }
 };
+
+export const STORAGE_HISTORY_TERMS_KEY = 'music_mweb:history_terms';
