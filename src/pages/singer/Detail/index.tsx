@@ -12,6 +12,8 @@ import {
 } from 'shared/domain/song/typings';
 import MusicList from 'shared/components/MusicList';
 
+import message from 'shared/lib/message';
+
 import styles from './index.module.scss';
 
 interface RouteParams {
@@ -32,7 +34,7 @@ const SingerDetail: React.FC<RouteComponentProps<RouteParams>> = props => {
     type: 'ROLL',
     fetcher: SongUsecase.getSingerSongList,
     query,
-    onError: e => console.log(e.message),
+    onError: e => message.error(e.message),
     disabled: !singerId
   });
 
@@ -40,7 +42,9 @@ const SingerDetail: React.FC<RouteComponentProps<RouteParams>> = props => {
     try {
       const result = await SongUsecase.getSingerDetail(singerId);
       setSinger(result);
-    } catch (e) {}
+    } catch (e) {
+      message.error(e.message);
+    }
   };
 
   const onBack = () => {

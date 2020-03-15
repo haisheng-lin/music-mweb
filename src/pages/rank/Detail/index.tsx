@@ -7,6 +7,8 @@ import MusicList from 'shared/components/MusicList';
 import SongUsecase from 'shared/domain/song';
 import usePagination from 'shared/hooks/usePagination';
 
+import message from 'shared/lib/message';
+
 import { FulfilledRank } from 'shared/domain/song/typings';
 
 import styles from './index.module.scss';
@@ -26,7 +28,9 @@ const RankDetail: React.FC<RouteComponentProps<
       const result = await SongUsecase.getRankList();
       const matched = result.find(item => item.type === rankType);
       setRank(matched);
-    } catch (e) {}
+    } catch (e) {
+      message.error(e.message);
+    }
   };
 
   const query = useMemo(() => ({ type: rankType }), [rankType]);
@@ -35,7 +39,7 @@ const RankDetail: React.FC<RouteComponentProps<
     type: 'ROLL',
     fetcher: SongUsecase.getRankSongList,
     query,
-    onError: e => console.log(e.message)
+    onError: e => message.error(e.message)
   });
 
   const onBack = () => {

@@ -8,6 +8,8 @@ import { STORAGE_HISTORY_TERMS_KEY } from 'shared/constants';
 import { PlayerSong, PlayingSong } from 'shared/domain/song/typings';
 import { shuffle } from 'shared/utils';
 
+import message from 'shared/lib/message';
+
 type PlayMode = 'SEQUENCE' | 'LOOP' | 'RANDOM';
 
 export default createContainer(() => {
@@ -66,7 +68,9 @@ export default createContainer(() => {
         lrcLink: result.lrcLink,
         playUrl: result.songLink
       });
-    } catch (e) {}
+    } catch (e) {
+      message.error(e.message);
+    }
   };
 
   useEffect(() => {

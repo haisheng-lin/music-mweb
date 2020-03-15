@@ -5,6 +5,8 @@ import SongUsecase from 'shared/domain/song';
 import { FulfilledSinger } from 'shared/domain/song/typings';
 import { LOCAL_PATHS } from 'shared/constants';
 
+import message from 'shared/lib/message';
+
 import styles from './index.module.scss';
 
 const SingerList: React.FC<RouteComponentProps> = props => {
@@ -14,7 +16,9 @@ const SingerList: React.FC<RouteComponentProps> = props => {
     try {
       const result = await SongUsecase.searchSingerList('z');
       setSingerList(result);
-    } catch (e) {}
+    } catch (e) {
+      message.error(e.message);
+    }
   };
 
   const onSingerClick = (singer: FulfilledSinger) => () => {

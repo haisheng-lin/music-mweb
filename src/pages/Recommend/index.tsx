@@ -4,6 +4,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import SongUsecase from 'shared/domain/song';
 import { FulfilledRecommendSong } from 'shared/domain/song/typings';
 
+import message from 'shared/lib/message';
+
 import styles from './index.module.scss';
 
 const Recommend: React.FC<RouteComponentProps> = props => {
@@ -15,7 +17,9 @@ const Recommend: React.FC<RouteComponentProps> = props => {
     try {
       const result = await SongUsecase.getRecommendList();
       setRecommendList(result);
-    } catch (e) {}
+    } catch (e) {
+      message.error(e.message);
+    }
   };
 
   useEffect(() => {

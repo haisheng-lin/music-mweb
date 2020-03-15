@@ -5,6 +5,8 @@ import SongUsecase from 'shared/domain/song';
 import { FulfilledRank } from 'shared/domain/song/typings';
 import { LOCAL_PATHS } from 'shared/constants';
 
+import message from 'shared/lib/message';
+
 import styles from './index.module.scss';
 
 const RankList: React.FC<RouteComponentProps> = props => {
@@ -14,7 +16,9 @@ const RankList: React.FC<RouteComponentProps> = props => {
     try {
       const result = await SongUsecase.getRankList();
       setRankList(result);
-    } catch (e) {}
+    } catch (e) {
+      message.error(e.message);
+    }
   };
 
   const onRankClick = (rank: FulfilledRank) => () => {
