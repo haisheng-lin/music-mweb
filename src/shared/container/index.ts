@@ -97,6 +97,7 @@ export default createContainer(() => {
     historyTerms,
     setHistoryTerms,
     selectPlay,
-    randomPlay
+    randomPlay,
+    playingSong
   };
 });
