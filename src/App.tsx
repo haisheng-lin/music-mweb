@@ -1,10 +1,16 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from 'react-router-dom';
 
 import Container from 'shared/container';
 
 import Header from 'shared/components/Header';
 import Tabs from 'shared/components/Tabs';
+import Player from 'business/Player';
 import Routes from 'pages/Routes';
 
 import { LOCAL_PATHS } from 'shared/constants';
@@ -25,9 +31,15 @@ const App: React.FC = () => {
       <Router>
         <Tabs tabs={tabs} />
         <Switch>
+          <Route
+            exact
+            path="/"
+            render={() => <Redirect to={LOCAL_PATHS.recommend.routePath} />}
+          />
           <Routes />
         </Switch>
       </Router>
+      <Player />
     </Container.Provider>
   );
 };
