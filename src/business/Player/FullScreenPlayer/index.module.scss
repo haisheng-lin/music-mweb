@@ -1,0 +1,162 @@
+@import 'assets/styles/mixin.scss';
+@import 'assets/styles/variables.scss';
+
+.container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 150;
+  background: $color-background;
+}
+
+.background {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.6;
+  filter: blur(20px);
+}
+
+.top {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.back {
+  position: absolute;
+  top: 0;
+  left: 6px;
+  z-index: 50;
+}
+
+.backIcon {
+  display: block;
+  padding: 9px;
+  font-size: $font-size-large-x;
+  color: $color-theme;
+  transform: rotate(-90deg);
+}
+
+.title {
+  width: 70%;
+  margin: 0 auto;
+  line-height: 40px;
+  text-align: center;
+  @include no-wrap();
+  font-size: $font-size-large;
+  color: $color-text;
+}
+
+.subtitle {
+  line-height: 20px;
+  text-align: center;
+  font-size: $font-size-medium;
+  color: $color-text;
+}
+
+.middle {
+  position: fixed;
+  width: 100%;
+  top: 80px;
+  bottom: 170px;
+  white-space: nowrap;
+}
+
+// 这种样式写法有点巧妙，学到了
+// 实现宽高比为 80% 的容器
+.middleLeft {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: 0;
+  padding-top: 80%;
+}
+
+// 绝对定位，即可与容器撑开高度相同？
+.cdWrapper {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  width: 80%;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.cdImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 10px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 50px;
+  width: 100%;
+}
+
+.progressWrapper {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  margin: 0 auto;
+  padding: 10px 0;
+}
+
+.time {
+  display: inline-block;
+  width: 30px;
+  line-height: 30px;
+  font-size: $font-size-small;
+  color: $color-text;
+  &.left {
+    text-align: left;
+    padding-right: 4px;
+  }
+  &.right {
+    text-align: right;
+    padding-left: 4px;
+  }
+}
+
+.progressBar {
+  flex: 1;
+}
+
+.operations {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  flex: 1;
+  color: $color-theme;
+  &.disable {
+    color: $color-text-d;
+  }
+  i {
+    font-size: 30px;
+  }
+}
+
+.leftIcon {
+  text-align: right;
+}
+
+.centerIcon {
+  padding: 0 20px;
+  text-align: center;
+  i {
+    font-size: 40px;
+  }
+}
+
+.rightIcon {
+  text-align: left;
+}
