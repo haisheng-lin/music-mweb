@@ -1,18 +1,18 @@
 import React from 'react';
 import classNames from 'classnames';
 
+import { PlayingSong } from 'shared/domain/song/typings';
+
 import styles from './index.module.scss';
 
 interface MiniPlayerProps {
   className?: string;
-  songName?: string;
-  singerName?: string;
-  image?: string;
+  playingSong?: PlayingSong;
   onPlayerClick?: () => void;
 }
 
 const MiniPlayer: React.FC<MiniPlayerProps> = props => {
-  const { className = '', songName, singerName, image, onPlayerClick } = props;
+  const { className = '', playingSong, onPlayerClick } = props;
 
   return (
     <div
@@ -28,14 +28,14 @@ const MiniPlayer: React.FC<MiniPlayerProps> = props => {
             className={styles.cdImage}
             width="40"
             height="40"
-            src={image}
-            alt={songName}
+            src={playingSong?.image}
+            alt={playingSong?.songName}
           />
         </div>
       </div>
       <div className={styles.text}>
-        <span className={styles.name}>{songName}</span>
-        <span className={styles.desc}>{singerName}</span>
+        <span className={styles.name}>{playingSong?.songName}</span>
+        <span className={styles.desc}>{playingSong?.singerName}</span>
       </div>
     </div>
   );

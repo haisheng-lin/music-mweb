@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import Container from 'shared/container';
 
@@ -17,6 +17,8 @@ const Player: React.FC = () => {
   } = Container.useContainer();
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  const [currentPlayingTime, setCurrentPlayingTime] = useState(0);
+
   const onFullScreenPlayerBack = () => {
     setIsPlayerFullScreen(false);
   };
@@ -29,32 +31,42 @@ const Player: React.FC = () => {
     setIsPlaying(prev => !prev);
   };
 
+  const updatePlayingTime = (e: any) => {
+    // 这里没办法，只能用 any
+    setCurrentPlayingTime(e.target.currentTime);
+  };
+
   useEffect(() => {
-    // if (audioRef.current) {
-    //   audioRef.current.play();
-    // }
-  }, [playingSong]);
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.play();
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [playingSong, isPlaying]);
 
   return (
     <div className={styles.container}>
       {isPlayerFullScreen ? (
         <FullScreenPlayer
-          songName={playingSong?.songName}
-          singerName={playingSong?.singerName}
-          image={playingSong?.image}
+          currentTime={currentPlayingTime}
+          playingSong={playingSong}
           isPlaying={isPlaying}
           onBack={onFullScreenPlayerBack}
           onPlayingToggle={onPlayingToggle}
         />
       ) : (
         <MiniPlayer
-          songName={playingSong?.songName}
-          singerName={playingSong?.singerName}
-          image={playingSong?.image}
+          playingSong={playingSong}
           onPlayerClick={onMiniPlayerClick}
         />
       )}
-      <audio ref={audioRef} src={playingSong?.playUrl} />
+      <audio
+        ref={audioRef}
+        src={playingSong?.playUrl}
+        onTimeUpdate={updatePlayingTime}
+      />
     </div>
   );
 };

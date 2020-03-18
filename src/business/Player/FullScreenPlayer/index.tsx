@@ -3,13 +3,14 @@ import classNames from 'classnames';
 
 import ProgressBar from './ProgressBar';
 
+import { PlayingSong } from 'shared/domain/song/typings';
+
 import styles from './index.module.scss';
 
 interface FullScreenPlayerProps {
   className?: string;
-  songName?: string;
-  singerName?: string;
-  image?: string;
+  playingSong?: PlayingSong;
+  currentTime?: number;
   isPlaying?: boolean;
   onBack?: () => void;
   onPlayingToggle?: () => void;
@@ -18,13 +19,33 @@ interface FullScreenPlayerProps {
 const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
   const {
     className = '',
-    songName,
-    singerName,
-    image,
+    currentTime,
+    playingSong,
     isPlaying,
     onBack,
     onPlayingToggle
   } = props;
+
+  const percent =
+    currentTime && playingSong ? currentTime / playingSong.duration : 0;
+
+  const pad = (val: string | number, n = 2) => {
+    let length = val.toString().length;
+    while (length < n) {
+      val = '0' + val;
+      length++;
+    }
+
+    return val;
+  };
+
+  const timeFormat = (time: number = 0) => {
+    time = Math.floor(time);
+    const minute = Math.floor(time / 60);
+    const second = pad(time % 60);
+
+    return `${minute}:${second}`;
+  };
 
   return (
     <div
@@ -34,7 +55,12 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
       })}
     >
       <div className={styles.background}>
-        <img width="100%" height="100%" src={image} alt={songName} />
+        <img
+          width="100%"
+          height="100%"
+          src={playingSong?.image}
+          alt={playingSong?.songName}
+        />
       </div>
       <div className={styles.top}>
         <div className={styles.back} onClick={onBack}>
@@ -45,13 +71,17 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
             })}
           />
         </div>
-        <h1 className={styles.title}>{songName}</h1>
-        <h2 className={styles.subtitle}>{singerName}</h2>
+        <h1 className={styles.title}>{playingSong?.songName}</h1>
+        <h2 className={styles.subtitle}>{playingSong?.singerName}</h2>
       </div>
       <div className={styles.middle}>
         <div className={styles.middleLeft}>
           <div className={styles.cdWrapper}>
-            <img className={styles.cdImage} src={image} alt={songName} />
+            <img
+              className={styles.cdImage}
+              src={playingSong?.image}
+              alt={playingSong?.songName}
+            />
           </div>
         </div>
       </div>
@@ -63,16 +93,16 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
               [styles.left]: true
             })}
           >
-            0:00
+            {timeFormat(currentTime)}
           </span>
-          <ProgressBar className={styles.progressBar} />
+          <ProgressBar className={styles.progressBar} percent={percent} />
           <span
             className={classNames({
               [styles.time]: true,
               [styles.right]: true
             })}
           >
-            0:00
+            {timeFormat(playingSong?.duration)}
           </span>
         </div>
         <div className={styles.operations}>
