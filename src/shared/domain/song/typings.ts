@@ -218,4 +218,5 @@ export interface PlayerSong {
 export interface PlayingSong extends PlayerSong {
   lrcLink: string;
   playUrl: string;
+  duration: number;
 }

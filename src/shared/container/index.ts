@@ -66,7 +66,8 @@ export default createContainer(() => {
         singerName: result.singerName,
         image: result.songPic,
         lrcLink: result.lrcLink,
-        playUrl: result.songLink
+        playUrl: result.songLink,
+        duration: result.time
       });
     } catch (e) {
       message.error(e.message);
