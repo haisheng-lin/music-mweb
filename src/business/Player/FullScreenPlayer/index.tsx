@@ -14,6 +14,7 @@ interface FullScreenPlayerProps {
   isPlaying?: boolean;
   onBack?: () => void;
   onPlayingToggle?: () => void;
+  onCurrentTimeChange?: (time: number) => void;
 }
 
 const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
@@ -23,7 +24,8 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
     playingSong,
     isPlaying,
     onBack,
-    onPlayingToggle
+    onPlayingToggle,
+    onCurrentTimeChange
   } = props;
 
   const percent =
@@ -45,6 +47,11 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
     const second = pad(time % 60);
 
     return `${minute}:${second}`;
+  };
+
+  const onPercentChange = (percent: number) => {
+    const time = (playingSong?.duration || 0) * percent;
+    onCurrentTimeChange && onCurrentTimeChange(time);
   };
 
   return (
@@ -95,7 +102,11 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
           >
             {timeFormat(currentTime)}
           </span>
-          <ProgressBar className={styles.progressBar} percent={percent} />
+          <ProgressBar
+            className={styles.progressBar}
+            percent={percent}
+            onPercentChange={onPercentChange}
+          />
           <span
             className={classNames({
               [styles.time]: true,

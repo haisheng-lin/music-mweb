@@ -36,6 +36,12 @@ const Player: React.FC = () => {
     setCurrentPlayingTime(e.target.currentTime);
   };
 
+  const onCurrentTimeChange = (time: number) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+    }
+  };
+
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -55,6 +61,7 @@ const Player: React.FC = () => {
           isPlaying={isPlaying}
           onBack={onFullScreenPlayerBack}
           onPlayingToggle={onPlayingToggle}
+          onCurrentTimeChange={onCurrentTimeChange}
         />
       ) : (
         <MiniPlayer
