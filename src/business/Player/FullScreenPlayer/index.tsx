@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import classNames from 'classnames';
 
 import ProgressBar from './ProgressBar';
 
+import { syncWrapperTransform } from '../common';
 import { PlayingSong } from 'shared/domain/song/typings';
 
 import styles from './index.module.scss';
 
 interface FullScreenPlayerProps {
   className?: string;
+  visible?: boolean;
   playingSong?: PlayingSong;
   currentTime?: number;
   isPlaying?: boolean;
@@ -20,6 +22,7 @@ interface FullScreenPlayerProps {
 const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
   const {
     className = '',
+    visible,
     currentTime,
     playingSong,
     isPlaying,
@@ -27,6 +30,9 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
     onPlayingToggle,
     onCurrentTimeChange
   } = props;
+
+  const cdWrapperRef = useRef<HTMLDivElement>(null);
+  const cdImageRef = useRef<HTMLImageElement>(null);
 
   const percent =
     currentTime && playingSong ? currentTime / playingSong.duration : 0;
@@ -54,10 +60,17 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
     onCurrentTimeChange && onCurrentTimeChange(time);
   };
 
+  useEffect(() => {
+    if (!isPlaying && cdWrapperRef.current && cdImageRef.current) {
+      syncWrapperTransform(cdWrapperRef.current, cdImageRef.current);
+    }
+  }, [isPlaying, cdWrapperRef, cdImageRef]);
+
   return (
     <div
       className={classNames({
         [styles.container]: true,
+        [styles.visible]: visible,
         [className]: true
       })}
     >
@@ -83,11 +96,15 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
       </div>
       <div className={styles.middle}>
         <div className={styles.middleLeft}>
-          <div className={styles.cdWrapper}>
+          <div className={styles.cdWrapper} ref={cdWrapperRef}>
             <img
-              className={styles.cdImage}
+              className={classNames({
+                [styles.cdImage]: true,
+                [styles.playing]: isPlaying
+              })}
               src={playingSong?.image}
               alt={playingSong?.songName}
+              ref={cdImageRef}
             />
           </div>
         </div>

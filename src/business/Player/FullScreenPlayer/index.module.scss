@@ -7,8 +7,14 @@
   right: 0;
   top: 0;
   bottom: 0;
-  z-index: 150;
+  opacity: 0;
+  z-index: -1;
+  transition: all 0.4s;
   background: $color-background;
+  &.visible {
+    opacity: 1;
+    z-index: 150;
+  }
 }
 
 .background {
@@ -94,6 +100,9 @@
   height: 100%;
   border: 10px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
+  &.playing {
+    animation: rotate 20s linear infinite;
+  }
 }
 
 .bottom {
@@ -160,4 +169,13 @@
 
 .rightIcon {
   text-align: left;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

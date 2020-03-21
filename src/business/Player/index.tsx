@@ -54,21 +54,21 @@ const Player: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      {isPlayerFullScreen ? (
-        <FullScreenPlayer
-          currentTime={currentPlayingTime}
-          playingSong={playingSong}
-          isPlaying={isPlaying}
-          onBack={onFullScreenPlayerBack}
-          onPlayingToggle={onPlayingToggle}
-          onCurrentTimeChange={onCurrentTimeChange}
-        />
-      ) : (
-        <MiniPlayer
-          playingSong={playingSong}
-          onPlayerClick={onMiniPlayerClick}
-        />
-      )}
+      <FullScreenPlayer
+        visible={isPlayerFullScreen}
+        currentTime={currentPlayingTime}
+        isPlaying={isPlaying}
+        playingSong={playingSong}
+        onBack={onFullScreenPlayerBack}
+        onPlayingToggle={onPlayingToggle}
+        onCurrentTimeChange={onCurrentTimeChange}
+      />
+      <MiniPlayer
+        visible={!isPlayerFullScreen && !!playingSong}
+        isPlaying={isPlaying}
+        playingSong={playingSong}
+        onPlayerClick={onMiniPlayerClick}
+      />
       <audio
         ref={audioRef}
         src={playingSong?.playUrl}

@@ -9,8 +9,14 @@
   align-items: center;
   width: 100%;
   height: 60px;
-  z-index: 180;
+  opacity: 0;
+  z-index: -1;
+  transition: all 0.4s;
   background: $color-highlight-background;
+  &.visible {
+    opacity: 1;
+    z-index: 180;
+  }
 }
 
 .cd {
@@ -27,6 +33,9 @@
 
 .cdImage {
   border-radius: 50%;
+  &.playing {
+    animation: rotate 20s linear infinite;
+  }
 }
 
 .text {
@@ -47,4 +56,13 @@
   @include no-wrap();
   font-size: $font-size-small;
   color: $color-text-d;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
