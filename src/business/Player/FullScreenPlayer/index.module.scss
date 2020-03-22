@@ -110,6 +110,21 @@
   }
 }
 
+.lyricWrapper {
+  width: 80%;
+  margin: 30px auto 0 auto;
+  overflow: hidden;
+  text-align: center;
+}
+
+.lyric {
+  display: block;
+  height: 20px;
+  line-height: 20px;
+  font-size: $font-size-medium;
+  color: $color-text-l;
+}
+
 .bottom {
   position: absolute;
   bottom: 50px;

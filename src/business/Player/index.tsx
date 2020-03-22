@@ -4,8 +4,11 @@ import Container from 'shared/container';
 
 import FullScreenPlayer from './FullScreenPlayer';
 import MiniPlayer from './MiniPlayer';
+import LyricParser from 'shared/lyric-parser';
 
 import { PlayMode } from 'shared/typings';
+
+import message from 'shared/lib/message';
 
 import styles from './index.module.scss';
 
@@ -22,6 +25,9 @@ const Player: React.FC = () => {
     isPlayerFullScreen,
     setIsPlayerFullScreen
   } = Container.useContainer();
+  const [isAudioReady, setIsAudioReady] = useState(false);
+  const [lyricParser, setLyricParser] = useState<LyricParser>();
+  const [playingLyric, setPlayingLyric] = useState<string>();
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const [currentPlayingTime, setCurrentPlayingTime] = useState(0);
@@ -36,6 +42,9 @@ const Player: React.FC = () => {
 
   const togglePlaying = () => {
     setIsPlaying(prev => !prev);
+    if (lyricParser) {
+      lyricParser.togglePlay();
+    }
   };
 
   const updatePlayingTime = (e: any) => {
@@ -47,6 +56,14 @@ const Player: React.FC = () => {
     if (audioRef.current) {
       audioRef.current.currentTime = time;
     }
+  };
+
+  const onAudioReady = () => {
+    setIsAudioReady(true);
+  };
+
+  const handleAudioError = () => {
+    message.error('播放出错');
   };
 
   const loop = () => {
@@ -76,20 +93,42 @@ const Player: React.FC = () => {
     }
   };
 
+  const handleLyric = (data: { lineNum: number; lyricText: string }) => {
+    setPlayingLyric(data.lyricText);
+  };
+
+  useEffect(() => {
+    setCurrentPlayingTime(0);
+    setIsAudioReady(false);
+    if (playingSong) {
+      setLyricParser(prev => {
+        prev && prev.stop();
+        return new LyricParser(playingSong.lyric, handleLyric);
+      });
+    }
+  }, [playingSong]);
+
+  useEffect(() => {
+    if (lyricParser && isPlaying) {
+      lyricParser.play();
+    }
+  }, [lyricParser, isPlaying]);
+
   useEffect(() => {
     if (audioRef.current) {
-      if (isPlaying) {
+      if (isPlaying && isAudioReady) {
         audioRef.current.play();
-      } else {
+      } else if (isAudioReady) {
         audioRef.current.pause();
       }
     }
-  }, [playingSong, isPlaying]);
+  }, [isPlaying, isAudioReady]);
 
   return (
     <div className={styles.container}>
       <FullScreenPlayer
         visible={isPlayerFullScreen}
+        lyric={playingLyric}
         playMode={playMode}
         currentTime={currentPlayingTime}
         isPlaying={isPlaying}
@@ -108,8 +147,10 @@ const Player: React.FC = () => {
       <audio
         ref={audioRef}
         src={playingSong?.playUrl}
+        onCanPlay={onAudioReady}
         onTimeUpdate={updatePlayingTime}
         onEnded={playingCompleted}
+        onError={handleAudioError}
       />
     </div>
   );

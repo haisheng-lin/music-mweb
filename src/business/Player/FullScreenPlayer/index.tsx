@@ -12,6 +12,7 @@ import styles from './index.module.scss';
 interface FullScreenPlayerProps {
   className?: string;
   visible?: boolean;
+  lyric?: string;
   playMode?: PlayMode;
   playingSong?: PlayingSong;
   currentTime?: number;
@@ -26,6 +27,7 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
   const {
     className = '',
     visible,
+    lyric,
     playMode,
     currentTime,
     playingSong,
@@ -123,6 +125,9 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
               alt={playingSong?.songName}
               ref={cdImageRef}
             />
+          </div>
+          <div className={styles.lyricWrapper}>
+            <div className={styles.lyric}>{lyric}</div>
           </div>
         </div>
       </div>

@@ -39,7 +39,6 @@ export default createContainer(() => {
     setPlayList(prev => [...prev, song]);
     setSongIndex(playList.length);
     setIsPlayerFullScreen(true);
-    setIsPlaying(true);
   };
 
   /**
@@ -51,7 +50,6 @@ export default createContainer(() => {
     setPlayList(list);
     setSongIndex(index);
     setIsPlayerFullScreen(true);
-    setIsPlaying(true);
   };
 
   /**
@@ -64,7 +62,6 @@ export default createContainer(() => {
     setPlayList(randomPlayList);
     setSongIndex(0);
     setIsPlayerFullScreen(true);
-    setIsPlaying(true);
   };
 
   const getSongDetail = async (songId: string) => {
@@ -80,6 +77,7 @@ export default createContainer(() => {
         playUrl: result.songLink,
         duration: result.time
       });
+      setIsPlaying(true);
     } catch (e) {
       message.error(e.message);
     }
