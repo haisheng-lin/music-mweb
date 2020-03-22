@@ -4,13 +4,12 @@ import { createContainer } from 'unstated-next';
 import useLocalStorage from 'shared/hooks/storage/useLocalStorage';
 
 import SongUsecase from 'shared/domain/song';
+import { shuffle } from 'shared/utils';
 import { STORAGE_HISTORY_TERMS_KEY } from 'shared/constants';
 import { PlayerSong, PlayingSong } from 'shared/domain/song/typings';
-import { shuffle } from 'shared/utils';
+import { PlayMode } from 'shared/typings';
 
 import message from 'shared/lib/message';
-
-type PlayMode = 'SEQUENCE' | 'LOOP' | 'RANDOM';
 
 export default createContainer(() => {
   // 是否在播放音乐
@@ -24,7 +23,7 @@ export default createContainer(() => {
   // 顺序播放列表
   const [sequenceList, setSequenceList] = useState<PlayerSong[]>([]);
   // 播放模式
-  const [playMode, setPlayMode] = useState<PlayMode>('SEQUENCE');
+  const [playMode, setPlayMode] = useState<PlayMode>(PlayMode.Sequence);
   // 播放的音乐在列表的索引
   const [songIndex, setSongIndex] = useState(-1);
   // 搜索历史
@@ -34,10 +33,21 @@ export default createContainer(() => {
   );
 
   /**
+   * 将歌曲添加至播放列表，并自动播放
+   */
+  const addAndPlaySong = (song: PlayerSong) => {
+    setPlayList(prev => [...prev, song]);
+    setSongIndex(playList.length);
+    setIsPlayerFullScreen(true);
+    setIsPlaying(true);
+  };
+
+  /**
    * 选择播放
    */
   const selectPlay = (list: PlayerSong[], index: number) => {
     setSequenceList(list);
+    // setPlayMode('SEQUENCE');
     setPlayList(list);
     setSongIndex(index);
     setIsPlayerFullScreen(true);
@@ -49,7 +59,7 @@ export default createContainer(() => {
    */
   const randomPlay = (list: PlayerSong[]) => {
     setSequenceList(list);
-    setPlayMode('RANDOM');
+    setPlayMode(PlayMode.Random);
     const randomPlayList = shuffle(list);
     setPlayList(randomPlayList);
     setSongIndex(0);
@@ -99,6 +109,7 @@ export default createContainer(() => {
     setHistoryTerms,
     selectPlay,
     randomPlay,
-    playingSong
+    playingSong,
+    addAndPlaySong
   };
 });

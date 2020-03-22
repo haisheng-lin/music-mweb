@@ -5,11 +5,18 @@ import Container from 'shared/container';
 import FullScreenPlayer from './FullScreenPlayer';
 import MiniPlayer from './MiniPlayer';
 
+import { PlayMode } from 'shared/typings';
+
 import styles from './index.module.scss';
 
 const Player: React.FC = () => {
   const {
     isPlaying,
+    playMode,
+    setPlayMode,
+    playList,
+    songIndex,
+    setSongIndex,
     setIsPlaying,
     playingSong,
     isPlayerFullScreen,
@@ -27,7 +34,7 @@ const Player: React.FC = () => {
     setIsPlayerFullScreen(true);
   };
 
-  const onPlayingToggle = () => {
+  const togglePlaying = () => {
     setIsPlaying(prev => !prev);
   };
 
@@ -39,6 +46,33 @@ const Player: React.FC = () => {
   const onCurrentTimeChange = (time: number) => {
     if (audioRef.current) {
       audioRef.current.currentTime = time;
+    }
+  };
+
+  const loop = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+    }
+  };
+
+  const next = () => {
+    const listLength = playList.length;
+    if (listLength === 1) {
+      loop();
+    } else {
+      const nextIndex = (songIndex + 1) % listLength;
+      setSongIndex(nextIndex);
+      if (!isPlaying) {
+        togglePlaying();
+      }
+    }
+  };
+
+  const playingCompleted = () => {
+    if (playMode === PlayMode.Loop) {
+      loop();
+    } else {
+      next();
     }
   };
 
@@ -56,12 +90,14 @@ const Player: React.FC = () => {
     <div className={styles.container}>
       <FullScreenPlayer
         visible={isPlayerFullScreen}
+        playMode={playMode}
         currentTime={currentPlayingTime}
         isPlaying={isPlaying}
         playingSong={playingSong}
         onBack={onFullScreenPlayerBack}
-        onPlayingToggle={onPlayingToggle}
+        onPlayingToggle={togglePlaying}
         onCurrentTimeChange={onCurrentTimeChange}
+        onPlayModeChange={setPlayMode}
       />
       <MiniPlayer
         visible={!isPlayerFullScreen && !!playingSong}
@@ -73,6 +109,7 @@ const Player: React.FC = () => {
         ref={audioRef}
         src={playingSong?.playUrl}
         onTimeUpdate={updatePlayingTime}
+        onEnded={playingCompleted}
       />
     </div>
   );

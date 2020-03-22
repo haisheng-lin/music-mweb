@@ -27,3 +27,9 @@ export interface RollApiPaginationResult<T> {
   list: T; // 具体数据模型
   limit: number; // 每页数量
 }
+
+export enum PlayMode {
+  Sequence = 'SEQUENCE',
+  Loop = 'LOOP',
+  Random = 'RANDOM'
+}

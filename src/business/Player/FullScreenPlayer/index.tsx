@@ -5,30 +5,35 @@ import ProgressBar from './ProgressBar';
 
 import { syncWrapperTransform } from '../common';
 import { PlayingSong } from 'shared/domain/song/typings';
+import { PlayMode } from 'shared/typings';
 
 import styles from './index.module.scss';
 
 interface FullScreenPlayerProps {
   className?: string;
   visible?: boolean;
+  playMode?: PlayMode;
   playingSong?: PlayingSong;
   currentTime?: number;
   isPlaying?: boolean;
   onBack?: () => void;
   onPlayingToggle?: () => void;
   onCurrentTimeChange?: (time: number) => void;
+  onPlayModeChange?: (mode: PlayMode) => void;
 }
 
 const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
   const {
     className = '',
     visible,
+    playMode,
     currentTime,
     playingSong,
     isPlaying,
     onBack,
     onPlayingToggle,
-    onCurrentTimeChange
+    onCurrentTimeChange,
+    onPlayModeChange
   } = props;
 
   const cdWrapperRef = useRef<HTMLDivElement>(null);
@@ -58,6 +63,13 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
   const onPercentChange = (percent: number) => {
     const time = (playingSong?.duration || 0) * percent;
     onCurrentTimeChange && onCurrentTimeChange(time);
+  };
+
+  const onModeChange = () => {
+    const modes = Object.values(PlayMode);
+    const index = modes.findIndex(mode => mode === playMode);
+    const nextIndex = (index + 1) % modes.length;
+    onPlayModeChange && onPlayModeChange(modes[nextIndex]);
   };
 
   useEffect(() => {
@@ -143,8 +155,11 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
           >
             <i
               className={classNames({
-                'icon-sequence': true
+                'icon-sequence': playMode === PlayMode.Sequence,
+                'icon-loop': playMode === PlayMode.Loop,
+                'icon-random': playMode === PlayMode.Random
               })}
+              onClick={onModeChange}
             />
           </div>
           <div

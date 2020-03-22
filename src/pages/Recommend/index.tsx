@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
+import Container from 'shared/container';
+
 import SongUsecase from 'shared/domain/song';
 import { FulfilledRecommendSong } from 'shared/domain/song/typings';
 
@@ -9,6 +11,7 @@ import message from 'shared/lib/message';
 import styles from './index.module.scss';
 
 const Recommend: React.FC<RouteComponentProps> = props => {
+  const { addAndPlaySong } = Container.useContainer();
   const [recommendList, setRecommendList] = useState<FulfilledRecommendSong[]>(
     []
   );
@@ -22,6 +25,15 @@ const Recommend: React.FC<RouteComponentProps> = props => {
     }
   };
 
+  const selectSong = (song: FulfilledRecommendSong) => () => {
+    addAndPlaySong({
+      songId: song.songId,
+      songName: song.songName,
+      singerName: song.singerName,
+      image: song.hugeSongPic
+    });
+  };
+
   useEffect(() => {
     getRecommendList();
   }, []);
@@ -32,7 +44,11 @@ const Recommend: React.FC<RouteComponentProps> = props => {
         <h1 className={styles.listTitle}>热门歌单推荐</h1>
         <ul>
           {recommendList.map(item => (
-            <li key={item.songId} className={styles.item}>
+            <li
+              key={item.songId}
+              className={styles.item}
+              onClick={selectSong(item)}
+            >
               <div className={styles.icon}>
                 <img
                   src={item.smallSongPic}
