@@ -216,7 +216,7 @@ export interface PlayerSong {
  * 正在播放的歌曲（需获取详情的歌词与播放地址）
  */
 export interface PlayingSong extends PlayerSong {
-  lrcLink: string;
+  lyric: string;
   playUrl: string;
   duration: number;
 }

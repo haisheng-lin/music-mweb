@@ -70,12 +70,13 @@ export default createContainer(() => {
   const getSongDetail = async (songId: string) => {
     try {
       const result = await SongUsecase.getSongDetail(songId);
+      const lyric = await SongUsecase.getLyric(result.lrcLink);
       setPlayingSong({
         songId: result.songId,
         songName: result.songName,
         singerName: result.singerName,
         image: result.songPic,
-        lrcLink: result.lrcLink,
+        lyric,
         playUrl: result.songLink,
         duration: result.time
       });

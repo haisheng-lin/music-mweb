@@ -73,5 +73,11 @@ export default {
    */
   getSongDetail: (songId: string) => {
     return request.get<ResponseSongDetail>('/music/song/detail', { songId });
+  },
+  /**
+   * 获取歌词
+   */
+  getLyric: (lyricLink: string) => {
+    return request.get<string>(lyricLink, { responseType: 'text' });
   }
 };

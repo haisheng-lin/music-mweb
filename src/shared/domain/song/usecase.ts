@@ -151,5 +151,6 @@ export default {
     };
 
     return ret;
-  }
+  },
+  getLyric: SongRepo.getLyric
 };
