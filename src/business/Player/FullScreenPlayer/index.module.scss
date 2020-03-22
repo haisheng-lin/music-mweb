@@ -31,6 +31,11 @@
 .top {
   position: relative;
   margin-bottom: 25px;
+  transform: translateY(-100px);
+  transition: all 0.5s;
+  &.visible {
+    transform: translateY(0);
+  }
 }
 
 .back {
@@ -109,6 +114,11 @@
   position: absolute;
   bottom: 50px;
   width: 100%;
+  transform: translateY(100px);
+  transition: all 0.5s;
+  &.visible {
+    transform: translateY(0);
+  }
 }
 
 .progressWrapper {

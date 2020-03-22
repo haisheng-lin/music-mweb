@@ -28,8 +28,11 @@ export interface RollApiPaginationResult<T> {
   limit: number; // 每页数量
 }
 
+/**
+ * 播放模式
+ */
 export enum PlayMode {
-  Sequence = 'SEQUENCE',
-  Loop = 'LOOP',
-  Random = 'RANDOM'
+  Sequence = 'SEQUENCE', // 顺序播放
+  Loop = 'LOOP', // 单曲循环
+  Random = 'RANDOM' // 随机播放
 }

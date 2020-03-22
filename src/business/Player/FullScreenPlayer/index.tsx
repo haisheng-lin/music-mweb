@@ -94,7 +94,12 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
           alt={playingSong?.songName}
         />
       </div>
-      <div className={styles.top}>
+      <div
+        className={classNames({
+          [styles.top]: true,
+          [styles.visible]: visible
+        })}
+      >
         <div className={styles.back} onClick={onBack}>
           <i
             className={classNames({
@@ -121,7 +126,12 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
           </div>
         </div>
       </div>
-      <div className={styles.bottom}>
+      <div
+        className={classNames({
+          [styles.bottom]: true,
+          [styles.visible]: visible
+        })}
+      >
         <div className={styles.progressWrapper}>
           <span
             className={classNames({
