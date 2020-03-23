@@ -14,7 +14,7 @@ const SingerList: React.FC<RouteComponentProps> = props => {
 
   const searchSingerList = async () => {
     try {
-      const result = await SongUsecase.searchSingerList('z');
+      const result = await SongUsecase.searchSingerList('c');
       setSingerList(result);
     } catch (e) {
       message.error(e.message);

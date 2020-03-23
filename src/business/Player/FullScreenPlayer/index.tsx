@@ -11,16 +11,18 @@ import styles from './index.module.scss';
 
 interface FullScreenPlayerProps {
   className?: string;
-  visible?: boolean;
-  lyric?: string;
-  playMode?: PlayMode;
-  playingSong?: PlayingSong;
-  currentTime?: number;
-  isPlaying?: boolean;
-  onBack?: () => void;
-  onPlayingToggle?: () => void;
-  onCurrentTimeChange?: (time: number) => void;
-  onPlayModeChange?: (mode: PlayMode) => void;
+  visible?: boolean; // 是否可见
+  lyric?: string; // 当前展示的歌词
+  playMode?: PlayMode; // 播放模式
+  playingSong?: PlayingSong; // 播放中的歌曲
+  currentTime?: number; // 当前播放时间
+  isPlaying?: boolean; // 是否播放中
+  onBack?: () => void; // 回退按钮回调
+  onPlayingToggle?: () => void; // 切换播放
+  onPercentChange?: (percent: number) => void; // 播放时间进度改变的回调
+  onPlayModeChange?: (mode: PlayMode) => void; // 播放模式改变的回调
+  onPrevClick?: () => void; // 左箭头图标点击的回调
+  onNextClick?: () => void; // 右箭头图标点击的回调
 }
 
 const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
@@ -34,8 +36,10 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
     isPlaying,
     onBack,
     onPlayingToggle,
-    onCurrentTimeChange,
-    onPlayModeChange
+    onPercentChange,
+    onPlayModeChange,
+    onPrevClick,
+    onNextClick
   } = props;
 
   const cdWrapperRef = useRef<HTMLDivElement>(null);
@@ -60,11 +64,6 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
     const second = pad(time % 60);
 
     return `${minute}:${second}`;
-  };
-
-  const onPercentChange = (percent: number) => {
-    const time = (playingSong?.duration || 0) * percent;
-    onCurrentTimeChange && onCurrentTimeChange(time);
   };
 
   const onModeChange = () => {
@@ -183,7 +182,7 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
               [styles.leftIcon]: true
             })}
           >
-            <i className="icon-prev" />
+            <i className="icon-prev" onClick={onPrevClick} />
           </div>
           <div
             className={classNames({
@@ -205,7 +204,7 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
               [styles.rightIcon]: true
             })}
           >
-            <i className="icon-next" />
+            <i className="icon-next" onClick={onNextClick} />
           </div>
           <div
             className={classNames({

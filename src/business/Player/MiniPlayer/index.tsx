@@ -8,10 +8,10 @@ import styles from './index.module.scss';
 
 interface MiniPlayerProps {
   className?: string;
-  visible?: boolean;
-  isPlaying?: boolean;
-  playingSong?: PlayingSong;
-  onPlayerClick?: () => void;
+  visible?: boolean; // 是否可见
+  isPlaying?: boolean; // 是否播放中
+  playingSong?: PlayingSong; // 当前播放的歌曲
+  onPlayerClick?: () => void; // 点击整个播放器的回调
 }
 
 const MiniPlayer: React.FC<MiniPlayerProps> = props => {

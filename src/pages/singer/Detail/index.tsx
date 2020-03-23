@@ -22,7 +22,7 @@ interface RouteParams {
 
 const SingerDetail: React.FC<RouteComponentProps<RouteParams>> = props => {
   const singerId = props.match.params.id;
-  const { selectPlay } = Container.useContainer();
+  const { addAndPlaySong } = Container.useContainer();
 
   const [singer, setSinger] = useState<FulfilledSingerDetail>();
 
@@ -51,16 +51,13 @@ const SingerDetail: React.FC<RouteComponentProps<RouteParams>> = props => {
     props.history.goBack();
   };
 
-  const onSongSelect = (_: FulfilledSingerSong, index: number) => {
-    selectPlay(
-      songList.map(song => ({
-        singerName: song.singerName,
-        songId: song.songId,
-        songName: song.songName,
-        image: song.songPic
-      })),
-      index
-    );
+  const onSongSelect = (song: FulfilledSingerSong) => {
+    addAndPlaySong({
+      singerName: song.singerName,
+      songId: song.songId,
+      songName: song.songName,
+      image: song.songPic
+    });
   };
 
   useEffect(() => {

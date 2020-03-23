@@ -52,9 +52,16 @@ const Player: React.FC = () => {
     setCurrentPlayingTime(e.target.currentTime);
   };
 
-  const onCurrentTimeChange = (time: number) => {
+  const onPercentChange = (percent: number) => {
+    const time = (playingSong?.duration || 0) * percent;
     if (audioRef.current) {
       audioRef.current.currentTime = time;
+    }
+    if (!isPlaying) {
+      togglePlaying();
+    }
+    if (lyricParser) {
+      lyricParser.seek(time * 1000);
     }
   };
 
@@ -97,6 +104,40 @@ const Player: React.FC = () => {
     setPlayingLyric(data.lyricText);
   };
 
+  const playPrevSong = () => {
+    if (!isAudioReady) {
+      return;
+    }
+    if (playList.length === 1) {
+      loop();
+    } else {
+      setSongIndex(prev => {
+        let nextIndex = (prev - 1) % playList.length;
+        if (nextIndex === -1) {
+          nextIndex = playList.length - 1;
+        }
+        return nextIndex;
+      });
+      if (!isPlaying) {
+        togglePlaying();
+      }
+    }
+  };
+
+  const playNextSong = () => {
+    if (!isAudioReady) {
+      return;
+    }
+    if (playList.length === 1) {
+      loop();
+    } else {
+      setSongIndex(prev => (prev + 1) % playList.length);
+      if (!isPlaying) {
+        togglePlaying();
+      }
+    }
+  };
+
   useEffect(() => {
     setCurrentPlayingTime(0);
     setIsAudioReady(false);
@@ -135,8 +176,10 @@ const Player: React.FC = () => {
         playingSong={playingSong}
         onBack={onFullScreenPlayerBack}
         onPlayingToggle={togglePlaying}
-        onCurrentTimeChange={onCurrentTimeChange}
+        onPercentChange={onPercentChange}
         onPlayModeChange={setPlayMode}
+        onPrevClick={playPrevSong}
+        onNextClick={playNextSong}
       />
       <MiniPlayer
         visible={!isPlayerFullScreen && !!playingSong}
