@@ -42,9 +42,6 @@ const Player: React.FC = () => {
 
   const togglePlaying = () => {
     setIsPlaying(prev => !prev);
-    if (lyricParser) {
-      lyricParser.togglePlay();
-    }
   };
 
   const updatePlayingTime = (e: any) => {
@@ -76,6 +73,10 @@ const Player: React.FC = () => {
   const loop = () => {
     if (audioRef.current) {
       audioRef.current.currentTime = 0;
+      audioRef.current.play();
+    }
+    if (lyricParser) {
+      lyricParser.seek();
     }
   };
 
@@ -150,8 +151,8 @@ const Player: React.FC = () => {
   }, [playingSong]);
 
   useEffect(() => {
-    if (lyricParser && isPlaying) {
-      lyricParser.play();
+    if (lyricParser) {
+      lyricParser.togglePlay();
     }
   }, [lyricParser, isPlaying]);
 
