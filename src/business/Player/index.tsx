@@ -32,6 +32,10 @@ const Player: React.FC = () => {
 
   const [currentPlayingTime, setCurrentPlayingTime] = useState(0);
 
+  const currentPercent = playingSong
+    ? currentPlayingTime / playingSong.duration
+    : 0;
+
   const onFullScreenPlayerBack = () => {
     setIsPlayerFullScreen(false);
   };
@@ -185,7 +189,9 @@ const Player: React.FC = () => {
       <MiniPlayer
         visible={!isPlayerFullScreen && !!playingSong}
         isPlaying={isPlaying}
+        percent={currentPercent}
         playingSong={playingSong}
+        onPlayingToggle={togglePlaying}
         onPlayerClick={onMiniPlayerClick}
       />
       <audio

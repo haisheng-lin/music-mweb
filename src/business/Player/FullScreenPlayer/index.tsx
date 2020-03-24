@@ -126,7 +126,7 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
             />
           </div>
           <div className={styles.lyricWrapper}>
-            <div className={styles.lyric}>{lyric}</div>
+            <span className={styles.lyric}>{lyric}</span>
           </div>
         </div>
       </div>

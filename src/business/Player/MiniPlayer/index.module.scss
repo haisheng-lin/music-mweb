@@ -58,6 +58,25 @@
   color: $color-text-d;
 }
 
+.control {
+  flex: 0 0 30px;
+  width: 30px;
+  padding: 0 10px;
+}
+
+.playIcon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 30px;
+  color: $color-theme-d;
+}
+
+.listIcon {
+  font-size: 30px;
+  color: $color-theme-d;
+}
+
 @keyframes rotate {
   0% {
     transform: rotate(0);

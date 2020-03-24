@@ -1,0 +1,18 @@
+@import 'assets/styles/mixin.scss';
+@import 'assets/styles/variables.scss';
+
+.container {
+  position: relative;
+  circle {
+    stroke-width: 8px;
+    transform-origin: center;
+    &.background {
+      transform: scale(0.9);
+      stroke: $color-theme-d;
+    }
+    &.progress {
+      transform: scale(0.9) rotate(-90deg);
+      stroke: $color-theme;
+    }
+  }
+}
