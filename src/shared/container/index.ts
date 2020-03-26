@@ -69,7 +69,7 @@ export default createContainer(() => {
       const result = await SongUsecase.getSongDetail(songId);
       const lyric = await SongUsecase.getLyric(result.lrcLink);
       setPlayingSong({
-        songId: result.songId,
+        songId,
         songName: result.songName,
         singerName: result.singerName,
         image: result.songPic,
