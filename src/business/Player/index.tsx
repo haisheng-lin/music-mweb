@@ -4,6 +4,7 @@ import Container from 'shared/container';
 
 import FullScreenPlayer from './FullScreenPlayer';
 import MiniPlayer from './MiniPlayer';
+import PlayListModal from './PlayListModal';
 import LyricParser from 'shared/lyric-parser';
 
 import { PlayMode } from 'shared/typings';
@@ -25,6 +26,7 @@ const Player: React.FC = () => {
     isPlayerFullScreen,
     setIsPlayerFullScreen
   } = Container.useContainer();
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAudioReady, setIsAudioReady] = useState(false);
   const [lyricParser, setLyricParser] = useState<LyricParser>();
   const [playingLyric, setPlayingLyric] = useState<string>();
@@ -193,6 +195,14 @@ const Player: React.FC = () => {
         playingSong={playingSong}
         onPlayingToggle={togglePlaying}
         onPlayerClick={onMiniPlayerClick}
+        onPlayListShow={() => setIsModalVisible(true)}
+      />
+      <PlayListModal
+        visible={isModalVisible}
+        playMode={playMode}
+        playList={playList}
+        playingSong={playingSong}
+        onClose={() => setIsModalVisible(false)}
       />
       <audio
         ref={audioRef}

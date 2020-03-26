@@ -95,7 +95,7 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
           alt={playingSong?.songName}
         />
       </div>
-      <div
+      <header
         className={classNames({
           [styles.top]: true,
           [styles.visible]: visible
@@ -111,9 +111,9 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
         </div>
         <h1 className={styles.title}>{playingSong?.songName}</h1>
         <h2 className={styles.subtitle}>{playingSong?.singerName}</h2>
-      </div>
-      <div className={styles.middle}>
-        <div className={styles.middleLeft}>
+      </header>
+      <main className={styles.middle}>
+        <section className={styles.middleLeft}>
           <div className={styles.cdWrapper} ref={cdWrapperRef}>
             <img
               className={classNames({
@@ -128,9 +128,9 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
           <div className={styles.lyricWrapper}>
             <span className={styles.lyric}>{lyric}</span>
           </div>
-        </div>
-      </div>
-      <div
+        </section>
+      </main>
+      <footer
         className={classNames({
           [styles.bottom]: true,
           [styles.visible]: visible
@@ -220,7 +220,7 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
             />
           </div>
         </div>
-      </div>
+      </footer>
     </div>
   );
 };
