@@ -16,6 +16,7 @@ interface PlayListModalProps {
   onSelect?: (song: PlayerSong) => void; // 选择歌曲回调
   onFavoriteToggle?: (song: PlayerSong) => void; // 反选歌曲收藏回调
   onRemove?: (song: PlayerSong) => void; // 移除歌曲回调
+  onClear?: () => void; // 清空播放列表回调
 }
 
 const playModeDescMap = {
@@ -34,7 +35,8 @@ const PlayListModal: React.FC<PlayListModalProps> = props => {
     onClose,
     onSelect,
     onFavoriteToggle,
-    onRemove
+    onRemove,
+    onClear
   } = props;
 
   const stopPropagation = (e: MouseEvent<HTMLElement>) => {
@@ -77,7 +79,7 @@ const PlayListModal: React.FC<PlayListModalProps> = props => {
           <span className={styles.modeText}>
             {playMode ? playModeDescMap[playMode] : ''}
           </span>
-          <span className={styles.clear}>
+          <span className={styles.clear} onClick={onClear}>
             <i
               className={classNames({
                 'icon-clear': true,
