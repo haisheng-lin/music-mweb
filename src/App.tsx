@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route,
   Redirect
@@ -13,9 +13,14 @@ import Tabs from 'shared/components/Tabs';
 import Player from 'business/Player';
 import Routes from 'pages/Routes';
 
-import { LOCAL_PATHS } from 'shared/constants';
+import { LOCAL_PATHS, BASE_NAME } from 'shared/constants';
 
-import 'assets/styles/index.scss';
+import 'assets/styles/reset.scss';
+import 'assets/styles/base.scss';
+import 'assets/styles/icon.scss';
+
+const VConsole = require('vconsole/dist/vconsole.min.js');
+new VConsole();
 
 const App: React.FC = () => {
   const tabs = [
@@ -28,7 +33,7 @@ const App: React.FC = () => {
   return (
     <Container.Provider>
       <Header />
-      <Router>
+      <Router basename={BASE_NAME}>
         <Tabs tabs={tabs} />
         <Switch>
           <Route
