@@ -1,24 +1,24 @@
 {
   "files": {
-    "main.css": "/haisheng-in.github.io/music-mweb/static/css/main.6e0e7d35.chunk.css",
-    "main.js": "/haisheng-in.github.io/music-mweb/static/js/main.a5d2d161.chunk.js",
-    "main.js.map": "/haisheng-in.github.io/music-mweb/static/js/main.a5d2d161.chunk.js.map",
-    "runtime-main.js": "/haisheng-in.github.io/music-mweb/static/js/runtime-main.e0835133.js",
-    "runtime-main.js.map": "/haisheng-in.github.io/music-mweb/static/js/runtime-main.e0835133.js.map",
-    "static/js/2.91461ff4.chunk.js": "/haisheng-in.github.io/music-mweb/static/js/2.91461ff4.chunk.js",
-    "static/js/2.91461ff4.chunk.js.map": "/haisheng-in.github.io/music-mweb/static/js/2.91461ff4.chunk.js.map",
-    "index.html": "/haisheng-in.github.io/music-mweb/index.html",
-    "precache-manifest.fa86233ff065ec7fd9a62debda0897db.js": "/haisheng-in.github.io/music-mweb/precache-manifest.fa86233ff065ec7fd9a62debda0897db.js",
-    "service-worker.js": "/haisheng-in.github.io/music-mweb/service-worker.js",
-    "static/css/main.6e0e7d35.chunk.css.map": "/haisheng-in.github.io/music-mweb/static/css/main.6e0e7d35.chunk.css.map",
-    "static/js/2.91461ff4.chunk.js.LICENSE.txt": "/haisheng-in.github.io/music-mweb/static/js/2.91461ff4.chunk.js.LICENSE.txt",
-    "static/media/index.module.scss": "/haisheng-in.github.io/music-mweb/static/media/logo@3x.ff9596ba.png",
-    "static/media/icon.scss": "/haisheng-in.github.io/music-mweb/static/media/music-icon.8a348576.svg"
+    "main.css": "/music-mweb/static/css/main.69ca83f9.chunk.css",
+    "main.js": "/music-mweb/static/js/main.08a2abae.chunk.js",
+    "main.js.map": "/music-mweb/static/js/main.08a2abae.chunk.js.map",
+    "runtime-main.js": "/music-mweb/static/js/runtime-main.11424062.js",
+    "runtime-main.js.map": "/music-mweb/static/js/runtime-main.11424062.js.map",
+    "static/js/2.91461ff4.chunk.js": "/music-mweb/static/js/2.91461ff4.chunk.js",
+    "static/js/2.91461ff4.chunk.js.map": "/music-mweb/static/js/2.91461ff4.chunk.js.map",
+    "index.html": "/music-mweb/index.html",
+    "precache-manifest.f00f7bf17c329afe7f1df863c7c09b9c.js": "/music-mweb/precache-manifest.f00f7bf17c329afe7f1df863c7c09b9c.js",
+    "service-worker.js": "/music-mweb/service-worker.js",
+    "static/css/main.69ca83f9.chunk.css.map": "/music-mweb/static/css/main.69ca83f9.chunk.css.map",
+    "static/js/2.91461ff4.chunk.js.LICENSE.txt": "/music-mweb/static/js/2.91461ff4.chunk.js.LICENSE.txt",
+    "static/media/index.module.scss": "/music-mweb/static/media/logo@3x.ff9596ba.png",
+    "static/media/icon.scss": "/music-mweb/static/media/music-icon.8a348576.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.e0835133.js",
+    "static/js/runtime-main.11424062.js",
     "static/js/2.91461ff4.chunk.js",
-    "static/css/main.6e0e7d35.chunk.css",
-    "static/js/main.a5d2d161.chunk.js"
+    "static/css/main.69ca83f9.chunk.css",
+    "static/js/main.08a2abae.chunk.js"
   ]
 }
