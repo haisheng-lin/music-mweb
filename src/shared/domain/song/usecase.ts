@@ -144,7 +144,7 @@ export default {
       songPic: response.songPic,
       lrcLink: response.lrcLink,
       time: response.time,
-      songLink: response.songLink,
+      songLink: response.songLink.replace(/http:/g, 'https:'),
       format: response.format,
       rate: response.rate,
       size: response.size
@@ -152,5 +152,7 @@ export default {
 
     return ret;
   },
-  getLyric: SongRepo.getLyric
+  getLyric: (lyricLink: string) => {
+    return SongRepo.getLyric(lyricLink.replace(/http:/g, 'https:'));
+  }
 };

@@ -1,3 +1,5 @@
+export const BASE_NAME = process.env.REACT_APP_BASE_NAME as string;
+
 // request
 const API_DOMAIN = process.env.REACT_APP_API_DOMAIN as string;
 const API_PREFIX_PATH = process.env.REACT_APP_API_PREFIX_PATH as string;
