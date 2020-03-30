@@ -12,6 +12,7 @@ interface MusicListProps {
   cover?: string;
   songList?: FulfilledSingerSong[];
   onBack?: () => void;
+  onRandomPlay?: () => void;
   onSongSelect?: (song: FulfilledSingerSong, index: number) => void;
 }
 
@@ -21,6 +22,7 @@ const MusicList: React.FC<MusicListProps> = props => {
     title,
     cover,
     songList,
+    onRandomPlay,
     onSongSelect,
     onBack
   } = props;
@@ -57,7 +59,9 @@ const MusicList: React.FC<MusicListProps> = props => {
                 [styles.playIcon]: true
               })}
             />
-            <span className={styles.text}>随机播放全部</span>
+            <span className={styles.text} onClick={onRandomPlay}>
+              随机播放全部
+            </span>
           </div>
         </div>
       </div>

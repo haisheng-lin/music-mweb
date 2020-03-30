@@ -5,11 +5,13 @@ import InfiniteScroller from 'react-infinite-scroller';
 import MusicList from 'shared/components/MusicList';
 
 import SongUsecase from 'shared/domain/song';
+
+import Container from 'shared/container';
 import usePagination from 'shared/hooks/usePagination';
 
 import message from 'shared/lib/message';
 
-import { FulfilledRank } from 'shared/domain/song/typings';
+import { FulfilledRank, FulfilledSingerSong } from 'shared/domain/song/typings';
 
 import styles from './index.module.scss';
 
@@ -21,6 +23,7 @@ const RankDetail: React.FC<RouteComponentProps<
   RankDetailRouteParamProps
 >> = props => {
   const rankType = Number(props.match.params.type);
+  const { addAndPlaySong } = Container.useContainer();
   const [rank, setRank] = useState<FulfilledRank>();
 
   const getRankList = async (rankType: number) => {
@@ -46,6 +49,15 @@ const RankDetail: React.FC<RouteComponentProps<
     props.history.goBack();
   };
 
+  const onSongSelect = (song: FulfilledSingerSong) => {
+    addAndPlaySong({
+      singerName: song.singerName,
+      songId: song.songId,
+      songName: song.songName,
+      image: song.songPic
+    });
+  };
+
   useEffect(() => {
     getRankList(rankType);
   }, [rankType]);
@@ -64,6 +76,7 @@ const RankDetail: React.FC<RouteComponentProps<
           cover={rank && rank.secondPic}
           songList={songList}
           onBack={onBack}
+          onSongSelect={onSongSelect}
         />
       </InfiniteScroller>
     </div>
