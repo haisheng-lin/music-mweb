@@ -5,6 +5,8 @@ import Container from 'shared/container';
 import FullScreenPlayer from './FullScreenPlayer';
 import MiniPlayer from './MiniPlayer';
 import PlayListModal from './PlayListModal';
+import Confirm from 'shared/components/Confirm';
+
 import LyricParser from 'shared/lyric-parser';
 
 import { PlayMode } from 'shared/typings';
@@ -24,9 +26,11 @@ const Player: React.FC = () => {
     setIsPlaying,
     playingSong,
     isPlayerFullScreen,
-    setIsPlayerFullScreen
+    setIsPlayerFullScreen,
+    clearPlayList
   } = Container.useContainer();
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+  const [isPlayListVisible, setIsPlayListVisible] = useState(false);
   const [isAudioReady, setIsAudioReady] = useState(false);
   const [lyricParser, setLyricParser] = useState<LyricParser>();
   const [playingLyric, setPlayingLyric] = useState<string>();
@@ -145,6 +149,12 @@ const Player: React.FC = () => {
     }
   };
 
+  const confirmClear = () => {
+    clearPlayList();
+    setIsConfirmVisible(false);
+    setIsPlayListVisible(false);
+  };
+
   useEffect(() => {
     setCurrentPlayingTime(0);
     setIsAudioReady(false);
@@ -195,14 +205,22 @@ const Player: React.FC = () => {
         playingSong={playingSong}
         onPlayingToggle={togglePlaying}
         onPlayerClick={onMiniPlayerClick}
-        onPlayListShow={() => setIsModalVisible(true)}
+        onPlayListShow={() => setIsPlayListVisible(true)}
       />
       <PlayListModal
-        visible={isModalVisible}
+        visible={isPlayListVisible}
         playMode={playMode}
         playList={playList}
         playingSong={playingSong}
-        onClose={() => setIsModalVisible(false)}
+        onClose={() => setIsPlayListVisible(false)}
+        onClear={() => setIsConfirmVisible(true)}
+      />
+      <Confirm
+        visible={isConfirmVisible}
+        content="是否清空播放列表"
+        confirmText="清空"
+        onCancel={() => setIsConfirmVisible(false)}
+        onConfirm={confirmClear}
       />
       <audio
         ref={audioRef}

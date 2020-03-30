@@ -11,7 +11,7 @@
   height: 60px;
   opacity: 0;
   z-index: -1;
-  transition: all 0.4s;
+  transition: all 0.3s;
   background: $color-highlight-background;
   &.visible {
     opacity: 1;
