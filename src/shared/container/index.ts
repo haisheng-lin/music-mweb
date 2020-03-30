@@ -33,11 +33,16 @@ export default createContainer(() => {
   );
 
   /**
-   * 将歌曲添加至播放列表，并自动播放
+   * 如果列表无歌曲，则添加，自动播放歌曲
    */
   const addAndPlaySong = (song: PlayerSong) => {
-    setPlayList(prev => [...prev, song]);
-    setSongIndex(playList.length);
+    const targetIndex = playList.findIndex(item => item.songId === song.songId);
+    if (targetIndex > -1) {
+      setSongIndex(targetIndex);
+    } else {
+      setPlayList(prev => [...prev, song]);
+      setSongIndex(playList.length);
+    }
     setIsPlayerFullScreen(true);
   };
 
@@ -83,6 +88,13 @@ export default createContainer(() => {
     }
   };
 
+  const clearPlayList = () => {
+    setPlayList([]);
+    setSequenceList([]);
+    setSongIndex(-1);
+    setIsPlaying(false);
+  };
+
   useEffect(() => {
     if (0 <= songIndex && songIndex < playList.length) {
       const playSong = playList[songIndex];
@@ -109,6 +121,7 @@ export default createContainer(() => {
     selectPlay,
     randomPlay,
     playingSong,
-    addAndPlaySong
+    addAndPlaySong,
+    clearPlayList
   };
 });
