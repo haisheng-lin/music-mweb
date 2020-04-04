@@ -30,7 +30,17 @@ const request = new Request({
       }
     }
   },
-  interceptors: {
+  reqInterceptors: {
+    onFulfilled: config => ({
+      ...config,
+      params: {
+        ...config.params,
+        app_id: API_APP_ID,
+        app_secret: API_APP_SECRET
+      }
+    })
+  },
+  resInterceptors: {
     onFulfilled: (res: AxiosResponse<ServerResponse>) => {
       const {
         data: resData,

@@ -36,7 +36,13 @@ export interface Response<T> {
 
 interface RequestOption {
   defaults?: AxiosRequestConfig;
-  interceptors?: {
+  reqInterceptors?: {
+    onFulfilled?: (
+      config: AxiosRequestConfig
+    ) => AxiosRequestConfig | Promise<AxiosRequestConfig>;
+    onRejected?: (error: any) => any | undefined;
+  };
+  resInterceptors?: {
     onFulfilled?: (
       value: AxiosResponse
     ) => AxiosResponse | Promise<AxiosResponse>;
@@ -47,15 +53,19 @@ interface RequestOption {
 class Request {
   private instance: AxiosInstance;
 
-  constructor({ defaults = {}, interceptors = {} }: RequestOption) {
+  constructor({
+    defaults = {},
+    reqInterceptors = {},
+    resInterceptors = {}
+  }: RequestOption) {
     this.instance = Axios.create({
       ...defaults,
       timeout: 50000
     });
 
     this.instance.interceptors.request.use(
-      cfg => cfg,
-      err => Promise.reject(err)
+      reqInterceptors.onFulfilled || (cfg => cfg),
+      reqInterceptors.onRejected || (err => Promise.reject(err))
     );
 
     const defaultOnFulFilled = (res: AxiosResponse) => res;
@@ -76,8 +86,8 @@ class Request {
     };
 
     this.instance.interceptors.response.use(
-      interceptors.onFulfilled || defaultOnFulFilled,
-      interceptors.onRejected || defaultOnRejected
+      resInterceptors.onFulfilled || defaultOnFulFilled,
+      resInterceptors.onRejected || defaultOnRejected
     );
   }
 
