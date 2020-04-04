@@ -29,4 +29,10 @@ export const LOCAL_PATHS = {
   }
 };
 
+// storage
+export const STORATE_PLAY_LIST_KEY = 'music_mweb:play_list';
 export const STORAGE_HISTORY_TERMS_KEY = 'music_mweb:history_terms';
+export const STORAGE_FAVORITE_LIST_KEY = 'music_mweb:favorite_list';
+
+// config
+export const MAX_FAVORITE_LIST_LENGTH = 200;

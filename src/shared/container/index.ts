@@ -4,8 +4,13 @@ import { createContainer } from 'unstated-next';
 import useLocalStorage from 'shared/hooks/storage/useLocalStorage';
 
 import SongUsecase from 'shared/domain/song';
-import { shuffle } from 'shared/utils';
-import { STORAGE_HISTORY_TERMS_KEY } from 'shared/constants';
+import { shuffle, insertToArray, deleteFromArray } from 'shared/utils';
+import {
+  STORATE_PLAY_LIST_KEY,
+  STORAGE_HISTORY_TERMS_KEY,
+  STORAGE_FAVORITE_LIST_KEY,
+  MAX_FAVORITE_LIST_LENGTH
+} from 'shared/constants';
 import { PlayerSong, PlayingSong } from 'shared/domain/song/typings';
 import { PlayMode } from 'shared/typings';
 
@@ -17,7 +22,10 @@ export default createContainer(() => {
   // 播放器是否全屏
   const [isPlayerFullScreen, setIsPlayerFullScreen] = useState(false);
   // 播放列表，当循环播放与随机播放时会跟 sequenceList 不同
-  const [playList, setPlayList] = useState<PlayerSong[]>([]);
+  const [playList, setPlayList] = useLocalStorage<PlayerSong[]>(
+    STORATE_PLAY_LIST_KEY,
+    []
+  );
   // 播放中的歌曲，需要额外获取详情的歌词与播放地址
   const [playingSong, setPlayingSong] = useState<PlayingSong>();
   // 顺序播放列表
@@ -31,6 +39,11 @@ export default createContainer(() => {
     STORAGE_HISTORY_TERMS_KEY,
     []
   );
+  // 收藏歌曲
+  const [favoriteList, setFavoriteList] = useLocalStorage<PlayerSong[]>(
+    STORAGE_FAVORITE_LIST_KEY,
+    []
+  );
 
   /**
    * 如果列表无歌曲，则添加，自动播放歌曲
@@ -40,7 +53,7 @@ export default createContainer(() => {
     if (targetIndex > -1) {
       setSongIndex(targetIndex);
     } else {
-      setPlayList(prev => [...prev, song]);
+      setPlayList(prev => (prev ? [...prev, song] : [song]));
       setSongIndex(playList.length);
     }
     setIsPlayerFullScreen(true);
@@ -69,6 +82,9 @@ export default createContainer(() => {
     setIsPlayerFullScreen(true);
   };
 
+  /**
+   * 获取歌曲详情
+   */
   const getSongDetail = async (songId: string) => {
     try {
       const result = await SongUsecase.getSongDetail(songId);
@@ -88,11 +104,39 @@ export default createContainer(() => {
     }
   };
 
+  /**
+   * 清空播放列表
+   */
   const clearPlayList = () => {
     setPlayList([]);
     setSequenceList([]);
     setSongIndex(-1);
     setIsPlaying(false);
+  };
+
+  /**
+   * 收藏歌曲
+   */
+  const saveFavorite = (song: PlayerSong) => {
+    setFavoriteList(prev =>
+      prev
+        ? insertToArray(
+            prev,
+            song,
+            item => item.songId === song.songId,
+            MAX_FAVORITE_LIST_LENGTH
+          )
+        : [song]
+    );
+  };
+
+  /**
+   * 取消收藏歌曲
+   */
+  const deleteFavorite = (song: PlayerSong) => {
+    setFavoriteList(prev =>
+      prev ? deleteFromArray(prev, item => item.songId === song.songId) : []
+    );
   };
 
   useEffect(() => {
@@ -122,6 +166,9 @@ export default createContainer(() => {
     randomPlay,
     playingSong,
     addAndPlaySong,
-    clearPlayList
+    clearPlayList,
+    favoriteList,
+    saveFavorite,
+    deleteFavorite
   };
 });
