@@ -45,6 +45,11 @@ const Player: React.FC = () => {
     ? currentPlayingTime / playingSong.duration
     : 0;
 
+  const faviroteSongIdSet = useMemo(
+    () => new Set(favoriteList.map(item => item.songId)),
+    [favoriteList]
+  );
+
   const onFullScreenPlayerBack = () => {
     setIsPlayerFullScreen(false);
   };
@@ -100,9 +105,9 @@ const Player: React.FC = () => {
     } else {
       const nextIndex = (songIndex + 1) % listLength;
       setSongIndex(nextIndex);
-      if (!isPlaying) {
-        togglePlaying();
-      }
+    }
+    if (!isPlaying) {
+      togglePlaying();
     }
   };
 
@@ -132,9 +137,9 @@ const Player: React.FC = () => {
         }
         return nextIndex;
       });
-      if (!isPlaying) {
-        togglePlaying();
-      }
+    }
+    if (!isPlaying) {
+      togglePlaying();
     }
   };
 
@@ -146,9 +151,9 @@ const Player: React.FC = () => {
       loop();
     } else {
       setSongIndex(prev => (prev + 1) % playList.length);
-      if (!isPlaying) {
-        togglePlaying();
-      }
+    }
+    if (!isPlaying) {
+      togglePlaying();
     }
   };
 
@@ -162,9 +167,18 @@ const Player: React.FC = () => {
     () =>
       playList.map(song => ({
         ...song,
-        isFavorite: !!favoriteList.find(item => item.songId === song.songId)
+        isFavorite: faviroteSongIdSet.has(song.songId)
       })),
-    [playList, favoriteList]
+    [playList, faviroteSongIdSet]
+  );
+
+  const fullScreenPlayingSong = useMemo(
+    () =>
+      playingSong && {
+        ...playingSong,
+        isFavorite: faviroteSongIdSet.has(playingSong.songId)
+      },
+    [playingSong, faviroteSongIdSet]
   );
 
   useEffect(() => {
@@ -202,13 +216,15 @@ const Player: React.FC = () => {
         playMode={playMode}
         currentTime={currentPlayingTime}
         isPlaying={isPlaying}
-        playingSong={playingSong}
+        playingSong={fullScreenPlayingSong}
         onBack={onFullScreenPlayerBack}
         onPlayingToggle={togglePlaying}
         onPercentChange={onPercentChange}
         onPlayModeChange={setPlayMode}
         onPrevClick={playPrevSong}
         onNextClick={playNextSong}
+        onFavoriteSave={saveFavorite}
+        onFavoriteDelete={deleteFavorite}
       />
       <MiniPlayer
         visible={!isPlayerFullScreen && !!playingSong}

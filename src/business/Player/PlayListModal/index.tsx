@@ -18,7 +18,7 @@ interface PlayListModalProps {
   playingSongId?: string; // 当前播放歌曲 id
   onClose?: () => void; // 关闭回调
   onSelect?: (song: Song) => void; // 选择歌曲回调
-  onFavoriteSave?: (song: Song) => void; // 反选歌曲收藏回调
+  onFavoriteSave?: (song: Song) => void;
   onFavoriteDelete?: (song: Song) => void;
   onRemove?: (song: Song) => void; // 移除歌曲回调
   onClear?: () => void; // 清空播放列表回调

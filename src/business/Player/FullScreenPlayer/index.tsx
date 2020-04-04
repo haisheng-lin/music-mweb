@@ -9,12 +9,16 @@ import { PlayMode } from 'shared/typings';
 
 import styles from './index.module.scss';
 
+interface Song extends PlayingSong {
+  isFavorite: boolean;
+}
+
 interface FullScreenPlayerProps {
   className?: string;
   visible?: boolean; // 是否可见
   lyric?: string; // 当前展示的歌词
   playMode?: PlayMode; // 播放模式
-  playingSong?: PlayingSong; // 播放中的歌曲
+  playingSong?: Song; // 播放中的歌曲
   currentTime?: number; // 当前播放时间
   isPlaying?: boolean; // 是否播放中
   onBack?: () => void; // 回退按钮回调
@@ -23,6 +27,8 @@ interface FullScreenPlayerProps {
   onPlayModeChange?: (mode: PlayMode) => void; // 播放模式改变的回调
   onPrevClick?: () => void; // 左箭头图标点击的回调
   onNextClick?: () => void; // 右箭头图标点击的回调
+  onFavoriteSave?: (song: Song) => void;
+  onFavoriteDelete?: (song: Song) => void;
 }
 
 const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
@@ -39,7 +45,9 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
     onPercentChange,
     onPlayModeChange,
     onPrevClick,
-    onNextClick
+    onNextClick,
+    onFavoriteSave,
+    onFavoriteDelete
   } = props;
 
   const cdWrapperRef = useRef<HTMLDivElement>(null);
@@ -71,6 +79,17 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
     const index = modes.findIndex(mode => mode === playMode);
     const nextIndex = (index + 1) % modes.length;
     onPlayModeChange && onPlayModeChange(modes[nextIndex]);
+  };
+
+  const toggleFavorite = () => {
+    if (!playingSong) {
+      return;
+    }
+    if (playingSong.isFavorite) {
+      onFavoriteDelete && onFavoriteDelete(playingSong);
+    } else {
+      onFavoriteSave && onFavoriteSave(playingSong);
+    }
   };
 
   useEffect(() => {
@@ -214,9 +233,11 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
           >
             <i
               className={classNames({
-                'icon-favorite': false,
-                'icon-not-favorite': true
+                [styles.favoriteIcon]: playingSong?.isFavorite,
+                'icon-favorite': playingSong?.isFavorite,
+                'icon-not-favorite': !playingSong?.isFavorite
               })}
+              onClick={toggleFavorite}
             />
           </div>
         </div>
