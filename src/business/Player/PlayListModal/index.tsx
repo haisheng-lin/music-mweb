@@ -6,16 +6,21 @@ import { PlayerSong } from 'shared/domain/song/typings';
 
 import styles from './index.module.scss';
 
+interface Song extends PlayerSong {
+  isFavorite: boolean;
+}
+
 interface PlayListModalProps {
   className?: string;
   visible?: boolean; // 是否可见
   playMode?: PlayMode; // 播放模式
-  playList?: PlayerSong[]; // 播放列表
-  playingSong?: PlayerSong; // 当前播放歌曲
+  playList?: Song[]; // 播放列表
+  playingSongId?: string; // 当前播放歌曲 id
   onClose?: () => void; // 关闭回调
-  onSelect?: (song: PlayerSong) => void; // 选择歌曲回调
-  onFavoriteToggle?: (song: PlayerSong) => void; // 反选歌曲收藏回调
-  onRemove?: (song: PlayerSong) => void; // 移除歌曲回调
+  onSelect?: (song: Song) => void; // 选择歌曲回调
+  onFavoriteSave?: (song: Song) => void; // 反选歌曲收藏回调
+  onFavoriteDelete?: (song: Song) => void;
+  onRemove?: (song: Song) => void; // 移除歌曲回调
   onClear?: () => void; // 清空播放列表回调
 }
 
@@ -31,10 +36,11 @@ const PlayListModal: React.FC<PlayListModalProps> = props => {
     visible,
     playMode,
     playList = [],
-    playingSong,
+    playingSongId,
     onClose,
     onSelect,
-    onFavoriteToggle,
+    onFavoriteSave,
+    onFavoriteDelete,
     onRemove,
     onClear
   } = props;
@@ -43,16 +49,20 @@ const PlayListModal: React.FC<PlayListModalProps> = props => {
     e.stopPropagation();
   };
 
-  const selectSong = (song: PlayerSong) => () => {
+  const selectSong = (song: Song) => () => {
     onSelect && onSelect(song);
   };
 
-  const toggleFavorite = (song: PlayerSong) => (e: MouseEvent<HTMLElement>) => {
+  const toggleFavorite = (song: Song) => (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation();
-    onFavoriteToggle && onFavoriteToggle(song);
+    if (song.isFavorite) {
+      onFavoriteDelete && onFavoriteDelete(song);
+    } else {
+      onFavoriteSave && onFavoriteSave(song);
+    }
   };
 
-  const removeSong = (song: PlayerSong) => (e: MouseEvent<HTMLElement>) => {
+  const removeSong = (song: Song) => (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation();
     onRemove && onRemove(song);
   };
@@ -98,15 +108,15 @@ const PlayListModal: React.FC<PlayListModalProps> = props => {
               <i
                 className={classNames({
                   [styles.current]: true,
-                  'icon-play': song.songId === playingSong?.songId
+                  'icon-play': song.songId === playingSongId
                 })}
               />
               <span className={styles.songName}>{song.songName}</span>
               <span className={styles.like} onClick={toggleFavorite(song)}>
                 <i
                   className={classNames({
-                    'icon-favorite': true, // TODO
-                    'icon-not-favorite': false
+                    'icon-favorite': song.isFavorite,
+                    'icon-not-favorite': !song.isFavorite
                   })}
                 />
               </span>

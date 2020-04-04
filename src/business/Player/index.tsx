@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 
 import Container from 'shared/container';
 
@@ -27,7 +27,10 @@ const Player: React.FC = () => {
     playingSong,
     isPlayerFullScreen,
     setIsPlayerFullScreen,
-    clearPlayList
+    clearPlayList,
+    favoriteList,
+    saveFavorite,
+    deleteFavorite
   } = Container.useContainer();
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const [isPlayListVisible, setIsPlayListVisible] = useState(false);
@@ -155,6 +158,15 @@ const Player: React.FC = () => {
     setIsPlayListVisible(false);
   };
 
+  const playListWithFavorite = useMemo(
+    () =>
+      playList.map(song => ({
+        ...song,
+        isFavorite: !!favoriteList.find(item => item.songId === song.songId)
+      })),
+    [playList, favoriteList]
+  );
+
   useEffect(() => {
     setCurrentPlayingTime(0);
     setIsAudioReady(false);
@@ -210,10 +222,12 @@ const Player: React.FC = () => {
       <PlayListModal
         visible={isPlayListVisible}
         playMode={playMode}
-        playList={playList}
-        playingSong={playingSong}
+        playList={playListWithFavorite}
+        playingSongId={playingSong?.songId}
         onClose={() => setIsPlayListVisible(false)}
         onClear={() => setIsConfirmVisible(true)}
+        onFavoriteSave={saveFavorite}
+        onFavoriteDelete={deleteFavorite}
       />
       <Confirm
         visible={isConfirmVisible}
