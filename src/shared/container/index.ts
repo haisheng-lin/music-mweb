@@ -142,18 +142,16 @@ export default createContainer(() => {
     );
   };
 
-  /**
-   * 播放列表或播放歌曲索引改变时的操作
-   */
   const onPlayListAndSongIndexChanged = async (
     list: PlayerSong[],
-    index: number
+    index: number,
+    playingSongId?: string
   ) => {
     try {
       if (0 <= index && index < list.length) {
         const playSong = list[index];
         const songId = playSong.songId;
-        if (songId !== playingSong?.songId) {
+        if (songId !== playingSongId) {
           const result = await SongUsecase.getSongDetail(songId);
           const lyric = await SongUsecase.getLyric(result.lrcLink);
           setPlayingSong({
@@ -177,8 +175,8 @@ export default createContainer(() => {
   };
 
   useEffect(() => {
-    onPlayListAndSongIndexChanged(playList, songIndex);
-  }, [playList, songIndex]);
+    onPlayListAndSongIndexChanged(playList, songIndex, playingSong?.songId);
+  }, [playList, songIndex, playingSong]);
 
   return {
     isPlaying,
