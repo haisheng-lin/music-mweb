@@ -8,9 +8,7 @@ import PlayListModal from './PlayListModal';
 import Confirm from 'shared/components/Confirm';
 
 import LyricParser from 'shared/lyric-parser';
-
 import { PlayMode } from 'shared/typings';
-
 import message from 'shared/lib/message';
 
 import styles from './index.module.scss';
@@ -30,7 +28,9 @@ const Player: React.FC = () => {
     clearPlayList,
     favoriteList,
     saveFavorite,
-    deleteFavorite
+    deleteFavorite,
+    addAndPlaySong,
+    deleteSong,
   } = Container.useContainer();
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const [isPlayListVisible, setIsPlayListVisible] = useState(false);
@@ -46,7 +46,7 @@ const Player: React.FC = () => {
     : 0;
 
   const faviroteSongIdSet = useMemo(
-    () => new Set(favoriteList.map(item => item.songId)),
+    () => new Set(favoriteList.map((item) => item.songId)),
     [favoriteList]
   );
 
@@ -59,7 +59,7 @@ const Player: React.FC = () => {
   };
 
   const togglePlaying = () => {
-    setIsPlaying(prev => !prev);
+    setIsPlaying((prev) => !prev);
   };
 
   const updatePlayingTime = (e: any) => {
@@ -130,7 +130,7 @@ const Player: React.FC = () => {
     if (playList.length === 1) {
       loop();
     } else {
-      setSongIndex(prev => {
+      setSongIndex((prev) => {
         let nextIndex = (prev - 1) % playList.length;
         if (nextIndex === -1) {
           nextIndex = playList.length - 1;
@@ -150,7 +150,7 @@ const Player: React.FC = () => {
     if (playList.length === 1) {
       loop();
     } else {
-      setSongIndex(prev => (prev + 1) % playList.length);
+      setSongIndex((prev) => (prev + 1) % playList.length);
     }
     if (!isPlaying) {
       togglePlaying();
@@ -165,9 +165,9 @@ const Player: React.FC = () => {
 
   const playListWithFavorite = useMemo(
     () =>
-      playList.map(song => ({
+      playList.map((song) => ({
         ...song,
-        isFavorite: faviroteSongIdSet.has(song.songId)
+        isFavorite: faviroteSongIdSet.has(song.songId),
       })),
     [playList, faviroteSongIdSet]
   );
@@ -176,7 +176,7 @@ const Player: React.FC = () => {
     () =>
       playingSong && {
         ...playingSong,
-        isFavorite: faviroteSongIdSet.has(playingSong.songId)
+        isFavorite: faviroteSongIdSet.has(playingSong.songId),
       },
     [playingSong, faviroteSongIdSet]
   );
@@ -185,7 +185,7 @@ const Player: React.FC = () => {
     setCurrentPlayingTime(0);
     setIsAudioReady(false);
     if (playingSong) {
-      setLyricParser(prev => {
+      setLyricParser((prev) => {
         prev && prev.stop();
         return new LyricParser(playingSong.lyric, handleLyric);
       });
@@ -241,6 +241,8 @@ const Player: React.FC = () => {
         playList={playListWithFavorite}
         playingSongId={playingSong?.songId}
         onClose={() => setIsPlayListVisible(false)}
+        onSelect={addAndPlaySong}
+        onRemove={deleteSong}
         onClear={() => setIsConfirmVisible(true)}
         onFavoriteSave={saveFavorite}
         onFavoriteDelete={deleteFavorite}

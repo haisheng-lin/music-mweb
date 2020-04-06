@@ -9,7 +9,7 @@ import {
   STORATE_PLAY_LIST_KEY,
   STORAGE_HISTORY_TERMS_KEY,
   STORAGE_FAVORITE_LIST_KEY,
-  MAX_FAVORITE_LIST_LENGTH
+  MAX_FAVORITE_LIST_LENGTH,
 } from 'shared/constants';
 import { PlayerSong, PlayingSong } from 'shared/domain/song/typings';
 import { PlayMode } from 'shared/typings';
@@ -49,14 +49,39 @@ export default createContainer(() => {
    * 如果列表无歌曲，则添加，自动播放歌曲
    */
   const addAndPlaySong = (song: PlayerSong) => {
-    const targetIndex = playList.findIndex(item => item.songId === song.songId);
+    const targetIndex = playList.findIndex(
+      (item) => item.songId === song.songId
+    );
     if (targetIndex > -1) {
       setSongIndex(targetIndex);
     } else {
-      setPlayList(prev => (prev ? [...prev, song] : [song]));
+      setPlayList((prev) => (prev ? [...prev, song] : [song]));
       setSongIndex(playList.length);
     }
     setIsPlayerFullScreen(true);
+  };
+
+  /**
+   * 从播放列表删除歌曲
+   */
+  const deleteSong = (song: PlayerSong) => {
+    const newPlayList = playList.slice();
+    const newSequenceList = sequenceList.slice();
+    let nextSongIndex = songIndex;
+
+    const pIndex = newPlayList.findIndex((item) => item.songId === song.songId);
+    newPlayList.splice(pIndex, 1);
+    const sIndex = newSequenceList.findIndex(
+      (item) => item.songId === song.songId
+    );
+    newSequenceList.splice(sIndex, 1);
+    if (songIndex > pIndex || nextSongIndex === newPlayList.length) {
+      // 如果删掉的歌曲在当前歌曲之前，或者当前歌曲是最后一首，则需减 1
+      nextSongIndex--;
+    }
+    setPlayList(newPlayList);
+    setSequenceList(newSequenceList);
+    setSongIndex(nextSongIndex);
   };
 
   /**
@@ -83,28 +108,6 @@ export default createContainer(() => {
   };
 
   /**
-   * 获取歌曲详情
-   */
-  const getSongDetail = async (songId: string) => {
-    try {
-      const result = await SongUsecase.getSongDetail(songId);
-      const lyric = await SongUsecase.getLyric(result.lrcLink);
-      setPlayingSong({
-        songId,
-        songName: result.songName,
-        singerName: result.singerName,
-        image: result.songPic,
-        lyric,
-        playUrl: result.songLink,
-        duration: result.time
-      });
-      setIsPlaying(true);
-    } catch (e) {
-      message.error(e.message);
-    }
-  };
-
-  /**
    * 清空播放列表
    */
   const clearPlayList = () => {
@@ -118,12 +121,12 @@ export default createContainer(() => {
    * 收藏歌曲
    */
   const saveFavorite = (song: PlayerSong) => {
-    setFavoriteList(prev =>
+    setFavoriteList((prev) =>
       prev
         ? insertToArray(
             prev,
             song,
-            item => item.songId === song.songId,
+            (item) => item.songId === song.songId,
             MAX_FAVORITE_LIST_LENGTH
           )
         : [song]
@@ -134,17 +137,47 @@ export default createContainer(() => {
    * 取消收藏歌曲
    */
   const deleteFavorite = (song: PlayerSong) => {
-    setFavoriteList(prev =>
-      prev ? deleteFromArray(prev, item => item.songId === song.songId) : []
+    setFavoriteList((prev) =>
+      prev ? deleteFromArray(prev, (item) => item.songId === song.songId) : []
     );
   };
 
-  useEffect(() => {
-    if (0 <= songIndex && songIndex < playList.length) {
-      const playSong = playList[songIndex];
-      const songId = playSong.songId;
-      getSongDetail(songId);
+  /**
+   * 播放列表或播放歌曲索引改变时的操作
+   */
+  const onPlayListAndSongIndexChanged = async (
+    list: PlayerSong[],
+    index: number
+  ) => {
+    try {
+      if (0 <= index && index < list.length) {
+        const playSong = list[index];
+        const songId = playSong.songId;
+        if (songId !== playingSong?.songId) {
+          const result = await SongUsecase.getSongDetail(songId);
+          const lyric = await SongUsecase.getLyric(result.lrcLink);
+          setPlayingSong({
+            songId,
+            songName: result.songName,
+            singerName: result.singerName,
+            image: result.songPic,
+            lyric,
+            playUrl: result.songLink,
+            duration: result.time,
+          });
+          setIsPlaying(true);
+        }
+      } else {
+        setIsPlaying(false);
+        setPlayingSong(undefined);
+      }
+    } catch (e) {
+      message.error(e.message);
     }
+  };
+
+  useEffect(() => {
+    onPlayListAndSongIndexChanged(playList, songIndex);
   }, [playList, songIndex]);
 
   return {
@@ -166,9 +199,10 @@ export default createContainer(() => {
     randomPlay,
     playingSong,
     addAndPlaySong,
+    deleteSong,
     clearPlayList,
     favoriteList,
     saveFavorite,
-    deleteFavorite
+    deleteFavorite,
   };
 });
