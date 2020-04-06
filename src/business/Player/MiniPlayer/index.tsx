@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, MouseEvent } from 'react';
+import React, { MouseEvent } from 'react';
 import classNames from 'classnames';
 
 import ProgressCircle from './ProgressCircle';
 
-import { syncWrapperTransform } from '../common';
 import { PlayingSong } from 'shared/domain/song/typings';
 
 import styles from './index.module.scss';
@@ -19,7 +18,7 @@ interface MiniPlayerProps {
   onPlayListShow?: () => void; // 点击列表图标的回调
 }
 
-const MiniPlayer: React.FC<MiniPlayerProps> = props => {
+const MiniPlayer: React.FC<MiniPlayerProps> = (props) => {
   const {
     className = '',
     visible,
@@ -28,11 +27,8 @@ const MiniPlayer: React.FC<MiniPlayerProps> = props => {
     playingSong,
     onPlayerClick,
     onPlayingToggle,
-    onPlayListShow
+    onPlayListShow,
   } = props;
-
-  const cdWrapperRef = useRef<HTMLDivElement>(null);
-  const cdImageRef = useRef<HTMLImageElement>(null);
 
   const clickPlayIcon = (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation(); // 阻止触发 onPlayerClick
@@ -44,33 +40,26 @@ const MiniPlayer: React.FC<MiniPlayerProps> = props => {
     onPlayListShow && onPlayListShow();
   };
 
-  useEffect(() => {
-    if (!isPlaying && cdWrapperRef.current && cdImageRef.current) {
-      syncWrapperTransform(cdWrapperRef.current, cdImageRef.current);
-    }
-  }, [isPlaying, cdWrapperRef, cdImageRef]);
-
   return (
     <div
       className={classNames({
         [styles.container]: true,
         [styles.visible]: visible,
-        [className]: true
+        [className]: true,
       })}
       onClick={onPlayerClick}
     >
       <div className={styles.cd}>
-        <div className={styles.cdImageWrapper} ref={cdWrapperRef}>
+        <div className={styles.cdImageWrapper}>
           <img
             className={classNames({
               [styles.cdImage]: true,
-              [styles.playing]: isPlaying
+              [styles.playing]: isPlaying,
             })}
             width="40"
             height="40"
             src={playingSong?.image}
             alt={playingSong?.songName}
-            ref={cdImageRef}
           />
         </div>
       </div>
@@ -84,7 +73,7 @@ const MiniPlayer: React.FC<MiniPlayerProps> = props => {
             className={classNames({
               [styles.playIcon]: true,
               'icon-pause-mini': isPlaying,
-              'icon-play-mini': !isPlaying
+              'icon-play-mini': !isPlaying,
             })}
             onClick={clickPlayIcon}
           />
@@ -94,7 +83,7 @@ const MiniPlayer: React.FC<MiniPlayerProps> = props => {
         <i
           className={classNames({
             [styles.listIcon]: true,
-            'icon-playlist': true
+            'icon-playlist': true,
           })}
           onClick={clickListIcon}
         />

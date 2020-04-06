@@ -1,9 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 
 import ProgressBar from './ProgressBar';
 
-import { syncWrapperTransform } from '../common';
 import { PlayingSong } from 'shared/domain/song/typings';
 import { PlayMode } from 'shared/typings';
 
@@ -31,7 +30,7 @@ interface FullScreenPlayerProps {
   onFavoriteDelete?: (song: Song) => void;
 }
 
-const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
+const FullScreenPlayer: React.FC<FullScreenPlayerProps> = (props) => {
   const {
     className = '',
     visible,
@@ -47,11 +46,8 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
     onPrevClick,
     onNextClick,
     onFavoriteSave,
-    onFavoriteDelete
+    onFavoriteDelete,
   } = props;
-
-  const cdWrapperRef = useRef<HTMLDivElement>(null);
-  const cdImageRef = useRef<HTMLImageElement>(null);
 
   const percent =
     currentTime && playingSong ? currentTime / playingSong.duration : 0;
@@ -76,7 +72,7 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
 
   const onModeChange = () => {
     const modes = Object.values(PlayMode);
-    const index = modes.findIndex(mode => mode === playMode);
+    const index = modes.findIndex((mode) => mode === playMode);
     const nextIndex = (index + 1) % modes.length;
     onPlayModeChange && onPlayModeChange(modes[nextIndex]);
   };
@@ -92,18 +88,12 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
     }
   };
 
-  useEffect(() => {
-    if (!isPlaying && cdWrapperRef.current && cdImageRef.current) {
-      syncWrapperTransform(cdWrapperRef.current, cdImageRef.current);
-    }
-  }, [isPlaying, cdWrapperRef, cdImageRef]);
-
   return (
     <div
       className={classNames({
         [styles.container]: true,
         [styles.visible]: visible,
-        [className]: true
+        [className]: true,
       })}
     >
       <div className={styles.background}>
@@ -117,14 +107,14 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
       <header
         className={classNames({
           [styles.top]: true,
-          [styles.visible]: visible
+          [styles.visible]: visible,
         })}
       >
         <div className={styles.back} onClick={onBack}>
           <i
             className={classNames({
               'icon-back': true,
-              [styles.backIcon]: true
+              [styles.backIcon]: true,
             })}
           />
         </div>
@@ -133,15 +123,14 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
       </header>
       <main className={styles.middle}>
         <section className={styles.middleLeft}>
-          <div className={styles.cdWrapper} ref={cdWrapperRef}>
+          <div className={styles.cdWrapper}>
             <img
               className={classNames({
                 [styles.cdImage]: true,
-                [styles.playing]: isPlaying
+                [styles.playing]: isPlaying,
               })}
               src={playingSong?.image}
               alt={playingSong?.songName}
-              ref={cdImageRef}
             />
           </div>
           <div className={styles.lyricWrapper}>
@@ -152,14 +141,14 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
       <footer
         className={classNames({
           [styles.bottom]: true,
-          [styles.visible]: visible
+          [styles.visible]: visible,
         })}
       >
         <div className={styles.progressWrapper}>
           <span
             className={classNames({
               [styles.time]: true,
-              [styles.left]: true
+              [styles.left]: true,
             })}
           >
             {timeFormat(currentTime)}
@@ -172,7 +161,7 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
           <span
             className={classNames({
               [styles.time]: true,
-              [styles.right]: true
+              [styles.right]: true,
             })}
           >
             {timeFormat(playingSong?.duration)}
@@ -183,14 +172,14 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
             className={classNames({
               'icon-left': true,
               [styles.icon]: true,
-              [styles.leftIcon]: true
+              [styles.leftIcon]: true,
             })}
           >
             <i
               className={classNames({
                 'icon-sequence': playMode === PlayMode.Sequence,
                 'icon-loop': playMode === PlayMode.Loop,
-                'icon-random': playMode === PlayMode.Random
+                'icon-random': playMode === PlayMode.Random,
               })}
               onClick={onModeChange}
             />
@@ -198,7 +187,7 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
           <div
             className={classNames({
               [styles.icon]: true,
-              [styles.leftIcon]: true
+              [styles.leftIcon]: true,
             })}
           >
             <i className="icon-prev" onClick={onPrevClick} />
@@ -206,13 +195,13 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
           <div
             className={classNames({
               [styles.icon]: true,
-              [styles.centerIcon]: true
+              [styles.centerIcon]: true,
             })}
           >
             <i
               className={classNames({
                 'icon-pause': isPlaying,
-                'icon-play': !isPlaying
+                'icon-play': !isPlaying,
               })}
               onClick={onPlayingToggle}
             />
@@ -220,7 +209,7 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
           <div
             className={classNames({
               [styles.icon]: true,
-              [styles.rightIcon]: true
+              [styles.rightIcon]: true,
             })}
           >
             <i className="icon-next" onClick={onNextClick} />
@@ -228,14 +217,14 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
           <div
             className={classNames({
               [styles.icon]: true,
-              [styles.rightIcon]: true
+              [styles.rightIcon]: true,
             })}
           >
             <i
               className={classNames({
                 [styles.favoriteIcon]: playingSong?.isFavorite,
                 'icon-favorite': playingSong?.isFavorite,
-                'icon-not-favorite': !playingSong?.isFavorite
+                'icon-not-favorite': !playingSong?.isFavorite,
               })}
               onClick={toggleFavorite}
             />

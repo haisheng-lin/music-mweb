@@ -33,8 +33,10 @@
 
 .cdImage {
   border-radius: 50%;
+  animation: rotate 20s linear infinite;
+  animation-play-state: paused;
   &.playing {
-    animation: rotate 20s linear infinite;
+    animation-play-state: running;
   }
 }
 
