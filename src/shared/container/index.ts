@@ -49,13 +49,11 @@ export default createContainer(() => {
    * 如果列表无歌曲，则添加，自动播放歌曲
    */
   const addAndPlaySong = (song: PlayerSong) => {
-    const targetIndex = playList.findIndex(
-      (item) => item.songId === song.songId
-    );
+    const targetIndex = playList.findIndex(item => item.songId === song.songId);
     if (targetIndex > -1) {
       setSongIndex(targetIndex);
     } else {
-      setPlayList((prev) => (prev ? [...prev, song] : [song]));
+      setPlayList(prev => (prev ? [...prev, song] : [song]));
       setSongIndex(playList.length);
     }
     setIsPlayerFullScreen(true);
@@ -69,10 +67,10 @@ export default createContainer(() => {
     const newSequenceList = sequenceList.slice();
     let nextSongIndex = songIndex;
 
-    const pIndex = newPlayList.findIndex((item) => item.songId === song.songId);
+    const pIndex = newPlayList.findIndex(item => item.songId === song.songId);
     newPlayList.splice(pIndex, 1);
     const sIndex = newSequenceList.findIndex(
-      (item) => item.songId === song.songId
+      item => item.songId === song.songId
     );
     newSequenceList.splice(sIndex, 1);
     if (songIndex > pIndex || nextSongIndex === newPlayList.length) {
@@ -121,12 +119,12 @@ export default createContainer(() => {
    * 收藏歌曲
    */
   const saveFavorite = (song: PlayerSong) => {
-    setFavoriteList((prev) =>
+    setFavoriteList(prev =>
       prev
         ? insertToArray(
             prev,
             song,
-            (item) => item.songId === song.songId,
+            item => item.songId === song.songId,
             MAX_FAVORITE_LIST_LENGTH
           )
         : [song]
@@ -137,8 +135,8 @@ export default createContainer(() => {
    * 取消收藏歌曲
    */
   const deleteFavorite = (song: PlayerSong) => {
-    setFavoriteList((prev) =>
-      prev ? deleteFromArray(prev, (item) => item.songId === song.songId) : []
+    setFavoriteList(prev =>
+      prev ? deleteFromArray(prev, item => item.songId === song.songId) : []
     );
   };
 

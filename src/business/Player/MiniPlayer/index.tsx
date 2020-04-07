@@ -18,7 +18,7 @@ interface MiniPlayerProps {
   onPlayListShow?: () => void; // 点击列表图标的回调
 }
 
-const MiniPlayer: React.FC<MiniPlayerProps> = (props) => {
+const MiniPlayer: React.FC<MiniPlayerProps> = props => {
   const {
     className = '',
     visible,

@@ -30,7 +30,7 @@ interface FullScreenPlayerProps {
   onFavoriteDelete?: (song: Song) => void;
 }
 
-const FullScreenPlayer: React.FC<FullScreenPlayerProps> = (props) => {
+const FullScreenPlayer: React.FC<FullScreenPlayerProps> = props => {
   const {
     className = '',
     visible,
@@ -72,7 +72,7 @@ const FullScreenPlayer: React.FC<FullScreenPlayerProps> = (props) => {
 
   const onModeChange = () => {
     const modes = Object.values(PlayMode);
-    const index = modes.findIndex((mode) => mode === playMode);
+    const index = modes.findIndex(mode => mode === playMode);
     const nextIndex = (index + 1) % modes.length;
     onPlayModeChange && onPlayModeChange(modes[nextIndex]);
   };
