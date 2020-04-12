@@ -17,7 +17,7 @@ const RankList: React.FC<RouteComponentProps> = props => {
       const result = await SongUsecase.getRankList();
       setRankList(result);
     } catch (e) {
-      message.error(e.message);
+      message.info(e.message);
     }
   };
 

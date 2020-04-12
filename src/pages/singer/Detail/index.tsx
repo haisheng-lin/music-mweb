@@ -8,7 +8,7 @@ import usePagination from 'shared/hooks/usePagination';
 import SongUsecase from 'shared/domain/song';
 import {
   FulfilledSingerDetail,
-  FulfilledSingerSong
+  FulfilledSingerSong,
 } from 'shared/domain/song/typings';
 import MusicList from 'shared/components/MusicList';
 
@@ -27,15 +27,15 @@ const SingerDetail: React.FC<RouteComponentProps<RouteParams>> = props => {
   const [singer, setSinger] = useState<FulfilledSingerDetail>();
 
   const query = useMemo(() => (singerId ? { singerId } : undefined), [
-    singerId
+    singerId,
   ]);
 
   const { data: songList, loadMore, hasMore } = usePagination({
     type: 'ROLL',
     fetcher: SongUsecase.getSingerSongList,
     query,
-    onError: e => message.error(e.message),
-    disabled: !singerId
+    onError: e => message.info(e.message),
+    disabled: !singerId,
   });
 
   const getSingerDetail = async (singerId: string) => {
@@ -43,7 +43,7 @@ const SingerDetail: React.FC<RouteComponentProps<RouteParams>> = props => {
       const result = await SongUsecase.getSingerDetail(singerId);
       setSinger(result);
     } catch (e) {
-      message.error(e.message);
+      message.info(e.message);
     }
   };
 
@@ -56,7 +56,7 @@ const SingerDetail: React.FC<RouteComponentProps<RouteParams>> = props => {
       singerName: song.singerName,
       songId: song.songId,
       songName: song.songName,
-      image: song.songPic
+      image: song.songPic,
     });
   };
 

@@ -85,7 +85,7 @@ const Player: React.FC = () => {
   };
 
   const handleAudioError = () => {
-    message.error('播放出错');
+    message.info('播放出错');
   };
 
   const loop = () => {

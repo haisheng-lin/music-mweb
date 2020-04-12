@@ -1,37 +1,82 @@
 import React, { createRef } from 'react';
 import ReactDOM from 'react-dom';
-import MessageContainer, { MessageContainerRef } from './Container';
 
-import { MessageType, MessageOption } from './typings';
+import Toast from './Toast';
+import { ToastRef } from './Toast/typings';
 
-const containerRef = createRef<MessageContainerRef>();
+import { MessageType, ToastOption } from './typings';
 
-const container = document.createElement('div');
-document.body.appendChild(container);
+interface Instance {
+  container: HTMLElement;
+  instance: any;
+  onClose?: () => void;
+}
 
-ReactDOM.render(<MessageContainer ref={containerRef} />, container);
+const toastRef = createRef<ToastRef>();
+const instanceMap = new Map<MessageType, Instance>();
 
-const createMessage = (
+const mountInstance = (
   type: MessageType,
-  content: React.ReactNode,
-  option?: MessageOption
+  component: JSX.Element,
+  option: ToastOption
 ) => {
-  if (containerRef.current) {
-    containerRef.current.createMessage(type, content, option);
+  const value = instanceMap.get(type);
+  if (value) {
+    value.onClose = option.onClose;
+    return;
+  }
+  const container = document.createElement('div');
+  container.setAttribute('id', type);
+  document.body.appendChild(container);
+  instanceMap.set(type, {
+    container,
+    instance: component,
+    onClose: option.onClose,
+  });
+  ReactDOM.render(component, container);
+};
+
+const noticeHandler = (
+  type: MessageType,
+  component: JSX.Element,
+  option: ToastOption
+) => {
+  mountInstance(type, component, option);
+  switch (type) {
+    case 'TOAST': {
+      if (toastRef.current) {
+        return toastRef.current.info(option);
+      }
+      break;
+    }
   }
 };
 
-export default {
-  success: (content: string, option?: MessageOption) => {
-    createMessage('SUCCESS', content, option);
-  },
-  error: (content: string, option?: MessageOption) => {
-    createMessage('ERROR', content, option);
-  },
-  info: (content: string, option?: MessageOption) => {
-    createMessage('INFO', content, option);
-  },
-  warning: (content: string, option?: MessageOption) => {
-    createMessage('WARNING', content, option);
+const unmountInstance = (type: MessageType) => {
+  const value = instanceMap.get(type);
+  if (!value) {
+    return;
   }
+  ReactDOM.unmountComponentAtNode(value.container);
+  document.body.removeChild(value.container);
+  instanceMap.delete(type);
+  value.onClose && value.onClose();
+};
+
+const onToastClose = () => {
+  unmountInstance('TOAST');
+};
+
+export default {
+  info: (content: React.ReactNode, duration?: number, onClose?: () => void) => {
+    return noticeHandler(
+      'TOAST',
+      <Toast onClose={onToastClose} ref={toastRef} />,
+      {
+        content,
+        duration,
+        onClose,
+      }
+    );
+  },
 };

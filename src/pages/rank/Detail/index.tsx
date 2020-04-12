@@ -32,7 +32,7 @@ const RankDetail: React.FC<RouteComponentProps<
       const matched = result.find(item => item.type === rankType);
       setRank(matched);
     } catch (e) {
-      message.error(e.message);
+      message.info(e.message);
     }
   };
 
@@ -42,7 +42,7 @@ const RankDetail: React.FC<RouteComponentProps<
     type: 'ROLL',
     fetcher: SongUsecase.getRankSongList,
     query,
-    onError: e => message.error(e.message)
+    onError: e => message.info(e.message),
   });
 
   const onBack = () => {
@@ -54,7 +54,7 @@ const RankDetail: React.FC<RouteComponentProps<
       singerName: song.singerName,
       songId: song.songId,
       songName: song.songName,
-      image: song.songPic
+      image: song.songPic,
     });
   };
 

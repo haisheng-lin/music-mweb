@@ -6,25 +6,24 @@
   width: 100%;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 9999;
-}
-
-.message {
-  box-sizing: border-box;
-  width: 80%;
-  padding: 19px 15px;
-  margin: auto;
-  line-height: 22px;
-  text-align: center;
-  font-size: $font-size-large;
-  color: $color-text-l;
-  background: $color-highlight-background;
-  border-radius: 13px;
+  opacity: 0;
+  z-index: -1;
+  transition: all 0.4s;
+  &.visible {
+    opacity: 1;
+    z-index: 9999;
+  }
 }
 
 .content {
-  line-height: 24px;
-  font-size: 20px;
-  color: #a0a0a8;
-  @include ellipsis-ln(2);
+  position: absolute;
+  box-sizing: border-box;
+  padding: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: $font-size-medium;
+  color: $color-text-l;
+  background: $color-highlight-background;
+  border-radius: 13px;
 }

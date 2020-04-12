@@ -168,7 +168,7 @@ export default createContainer(() => {
         setPlayingSong(undefined);
       }
     } catch (e) {
-      message.error(e.message);
+      message.info(e.message);
     }
   };
 

@@ -21,7 +21,7 @@ const Recommend: React.FC<RouteComponentProps> = props => {
       const result = await SongUsecase.getRecommendList();
       setRecommendList(result);
     } catch (e) {
-      message.error(e.message);
+      message.info(e.message);
     }
   };
 
@@ -30,7 +30,7 @@ const Recommend: React.FC<RouteComponentProps> = props => {
       songId: song.songId,
       songName: song.songName,
       singerName: song.singerName,
-      image: song.hugeSongPic
+      image: song.hugeSongPic,
     });
   };
 
