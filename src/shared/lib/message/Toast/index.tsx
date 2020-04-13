@@ -7,8 +7,7 @@ import React, {
 } from 'react';
 import classNames from 'classnames';
 
-import { ToastOption } from '../typings';
-import { ToastProps, ToastRef } from './typings';
+import { ToastProps, ToastRef, ToastOption } from './typings';
 
 import styles from './index.module.scss';
 

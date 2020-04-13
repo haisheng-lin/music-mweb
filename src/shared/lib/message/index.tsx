@@ -2,9 +2,12 @@ import React, { createRef } from 'react';
 import ReactDOM from 'react-dom';
 
 import Toast from './Toast';
-import { ToastRef } from './Toast/typings';
+import { ToastRef, ToastOption } from './Toast/typings';
 
-import { MessageType, ToastOption } from './typings';
+import Confirm from './Confirm';
+import { ConfirmRef, ConfirmOption } from './Confirm/typings';
+
+import { MessageType } from './typings';
 
 interface Instance {
   container: HTMLElement;
@@ -13,12 +16,13 @@ interface Instance {
 }
 
 const toastRef = createRef<ToastRef>();
+const confirmRef = createRef<ConfirmRef>();
 const instanceMap = new Map<MessageType, Instance>();
 
 const mountInstance = (
   type: MessageType,
   component: JSX.Element,
-  option: ToastOption
+  option: ToastOption | ConfirmOption
 ) => {
   const value = instanceMap.get(type);
   if (value) {
@@ -39,13 +43,19 @@ const mountInstance = (
 const noticeHandler = (
   type: MessageType,
   component: JSX.Element,
-  option: ToastOption
+  option: ToastOption | ConfirmOption
 ) => {
   mountInstance(type, component, option);
   switch (type) {
     case 'TOAST': {
       if (toastRef.current) {
         return toastRef.current.info(option);
+      }
+      break;
+    }
+    case 'CONFIRM': {
+      if (confirmRef.current) {
+        return confirmRef.current.confirm(option);
       }
       break;
     }
@@ -67,6 +77,10 @@ const onToastClose = () => {
   unmountInstance('TOAST');
 };
 
+const onConfirmClose = () => {
+  unmountInstance('CONFIRM');
+};
+
 export default {
   info: (content: React.ReactNode, duration?: number, onClose?: () => void) => {
     return noticeHandler(
@@ -77,6 +91,13 @@ export default {
         duration,
         onClose,
       }
+    );
+  },
+  confirm: (option: ConfirmOption) => {
+    return noticeHandler(
+      'CONFIRM',
+      <Confirm onClose={onConfirmClose} ref={confirmRef} />,
+      option
     );
   },
 };

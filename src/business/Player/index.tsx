@@ -5,7 +5,6 @@ import Container from 'shared/container';
 import FullScreenPlayer from './FullScreenPlayer';
 import MiniPlayer from './MiniPlayer';
 import PlayListModal from './PlayListModal';
-import Confirm from 'shared/components/Confirm';
 
 import LyricParser from 'shared/lyric-parser';
 import { PlayMode } from 'shared/typings';
@@ -32,7 +31,6 @@ const Player: React.FC = () => {
     addAndPlaySong,
     deleteSong,
   } = Container.useContainer();
-  const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const [isPlayListVisible, setIsPlayListVisible] = useState(false);
   const [isAudioReady, setIsAudioReady] = useState(false);
   const [lyricParser, setLyricParser] = useState<LyricParser>();
@@ -159,7 +157,6 @@ const Player: React.FC = () => {
 
   const confirmClear = () => {
     clearPlayList();
-    setIsConfirmVisible(false);
     setIsPlayListVisible(false);
   };
 
@@ -180,6 +177,14 @@ const Player: React.FC = () => {
       },
     [playingSong, faviroteSongIdSet]
   );
+
+  const showConfirm = () => {
+    message.confirm({
+      content: '是否清空播放列表',
+      confirmText: '清空',
+      onConfirm: confirmClear,
+    });
+  };
 
   useEffect(() => {
     setCurrentPlayingTime(0);
@@ -243,16 +248,9 @@ const Player: React.FC = () => {
         onClose={() => setIsPlayListVisible(false)}
         onSelect={addAndPlaySong}
         onRemove={deleteSong}
-        onClear={() => setIsConfirmVisible(true)}
+        onClear={showConfirm}
         onFavoriteSave={saveFavorite}
         onFavoriteDelete={deleteFavorite}
-      />
-      <Confirm
-        visible={isConfirmVisible}
-        content="是否清空播放列表"
-        confirmText="清空"
-        onCancel={() => setIsConfirmVisible(false)}
-        onConfirm={confirmClear}
       />
       <audio
         ref={audioRef}
