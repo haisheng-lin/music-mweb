@@ -90,15 +90,15 @@ const tagRegMap: { [key: string]: string } = {
   artist: 'ar',
   album: 'al',
   offset: 'offset',
-  by: 'by'
+  by: 'by',
 };
 
 const noop = () => undefined; // dummy 函数
 
 class LyricParser {
-  private lyric: string; // 所有歌词
-  private tags: { [key: string]: string }; // 映射标签与标签内容，{ ti: '晴天' }
-  private lines: { time: number; lyricText: string }[]; // 我们需要的结构
+  private lyric!: string; // 所有歌词
+  private tags!: { [key: string]: string }; // 映射标签与标签内容，{ ti: '晴天' }
+  private lines!: { time: number; lyricText: string }[]; // 我们需要的结构
   private handler: LyricHandler; // 用户定义的事件回调函数
   private state: PlayState; // 播放状态
   private curNum!: number; // 当前的播放歌词的索引
@@ -106,12 +106,13 @@ class LyricParser {
   private pauseStamp!: number; // 暂停播放时的绝对时间
   private timer!: NodeJS.Timeout;
 
-  constructor(lyric: string, handler: LyricHandler = noop) {
-    this.lyric = lyric;
-    this.tags = {};
-    this.lines = [];
+  constructor(handler: LyricHandler = noop) {
     this.handler = handler;
     this.state = 'PAUSE';
+  }
+
+  public setLyric(lyric: string) {
+    this.lyric = lyric;
     this.init();
   }
 
@@ -120,10 +121,9 @@ class LyricParser {
    *
    * @param {number} startTime 开始播放时间（相对第一句歌词）
    * @param {boolean} skipLast 是否跳过播放上一句歌词
-   * @returns {void}
    */
-  public play(startTime: number = 0, skipLast?: boolean): void {
-    if (!this.lines.length) {
+  public play(startTime: number = 0, skipLast?: boolean) {
+    if (!this.lines?.length) {
       return;
     }
     this.state = 'PLAYING';
@@ -142,7 +142,7 @@ class LyricParser {
   /**
    * 切换播放状态
    */
-  public togglePlay(): void {
+  public togglePlay() {
     const now = +new Date();
     if (this.state === 'PLAYING') {
       this.stop();
@@ -166,18 +166,18 @@ class LyricParser {
    * 跳至第 offset 行歌词
    *
    * @param {number} offset
-   * @returns {void}
    */
-  public seek(offset: number = 0): void {
+  public seek(offset: number = 0) {
     this.play(offset);
   }
 
-  private init(): void {
+  private init() {
     this.initTag();
     this.initLines();
   }
 
-  private initTag(): void {
+  private initTag() {
+    this.tags = {};
     for (const tag in tagRegMap) {
       if (tagRegMap.hasOwnProperty(tag)) {
         // 寻找整个歌词字符串中每个标签对应的内容
@@ -189,7 +189,8 @@ class LyricParser {
     }
   }
 
-  private initLines(): void {
+  private initLines() {
+    this.lines = [];
     const lines = this.lyric.split('\n');
     for (const line of lines) {
       const result = timeExp.exec(line);
@@ -201,7 +202,7 @@ class LyricParser {
               +result[1] * 60 * 1000 +
               +result[2] * 1000 +
               (+result[3] || 0) * 10,
-            lyricText
+            lyricText,
           });
         }
       }
@@ -216,9 +217,8 @@ class LyricParser {
    * 根据时间点返回相应的歌词索引
    *
    * @param {number} time 相对第一句歌词的时间
-   * @returns {number}
    */
-  private findCurNum(time: number): number {
+  private findCurNum(time: number) {
     for (let i = 0; i < this.lines.length; i++) {
       if (time <= this.lines[i].time) {
         return i;
@@ -228,19 +228,16 @@ class LyricParser {
   }
 
   /**
-   * 调用用户传入的事件函数
-   *
    * @param {number} i 当前歌词索引
-   * @returns {void}
    */
-  private callHandler(i: number): void {
+  private callHandler(i: number) {
     if (i < 0) {
       return;
     }
     this.handler({ lineNum: i, lyricText: this.lines[i].lyricText });
   }
 
-  private playRest(): void {
+  private playRest() {
     const line = this.lines[this.curNum];
     const delay = line.time - (+new Date() - this.startStamp);
     this.timer = setTimeout(() => {

@@ -33,8 +33,9 @@ const Player: React.FC = () => {
   } = Container.useContainer();
   const [isPlayListVisible, setIsPlayListVisible] = useState(false);
   const [isAudioReady, setIsAudioReady] = useState(false);
-  const [lyricParser, setLyricParser] = useState<LyricParser>();
   const [playingLyric, setPlayingLyric] = useState<string>();
+
+  const lyricParser = useRef<LyricParser | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const [currentPlayingTime, setCurrentPlayingTime] = useState(0);
@@ -73,9 +74,7 @@ const Player: React.FC = () => {
     if (!isPlaying) {
       togglePlaying();
     }
-    if (lyricParser) {
-      lyricParser.seek(time * 1000);
-    }
+    lyricParser.current?.seek(time * 1000);
   };
 
   const onAudioReady = () => {
@@ -91,9 +90,7 @@ const Player: React.FC = () => {
       audioRef.current.currentTime = 0;
       audioRef.current.play();
     }
-    if (lyricParser) {
-      lyricParser.seek();
-    }
+    lyricParser.current?.seek();
   };
 
   const next = () => {
@@ -187,29 +184,31 @@ const Player: React.FC = () => {
   };
 
   useEffect(() => {
+    lyricParser.current = new LyricParser(handleLyric);
+    return () => {
+      lyricParser.current?.stop();
+    };
+  }, []);
+
+  useEffect(() => {
     setCurrentPlayingTime(0);
     setIsAudioReady(false);
     if (playingSong) {
-      setLyricParser(prev => {
-        prev && prev.stop();
-        return new LyricParser(playingSong.lyric, handleLyric);
-      });
+      lyricParser.current?.stop();
+      lyricParser.current?.setLyric(playingSong.lyric);
     }
   }, [playingSong]);
 
   useEffect(() => {
-    if (lyricParser) {
-      lyricParser.togglePlay();
+    if (!isAudioReady) {
+      return;
     }
-  }, [lyricParser, isPlaying]);
-
-  useEffect(() => {
-    if (audioRef.current) {
-      if (isPlaying && isAudioReady) {
-        audioRef.current.play();
-      } else if (isAudioReady) {
-        audioRef.current.pause();
-      }
+    if (isPlaying) {
+      audioRef.current?.play();
+      lyricParser.current?.play();
+    } else {
+      lyricParser.current?.stop();
+      audioRef.current?.pause();
     }
   }, [isPlaying, isAudioReady]);
 
