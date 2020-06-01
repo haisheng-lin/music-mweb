@@ -46,7 +46,7 @@ const Toast = forwardRef<ToastRef, ToastProps>((props, ref) => {
         onClose && onClose();
       }, animationDuration);
     }
-  }, [visible, onClose]);
+  }, [visible, onClose, content]);
 
   useEffect(() => {
     return () => {
