@@ -1,0 +1,14 @@
+.content {
+  padding: 8px 12px;
+  opacity: 0;
+  transform: translateY(-100%);
+  color: #fff;
+  transition: all 0.2s;
+  background: #333;
+  border-radius: 8px;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
